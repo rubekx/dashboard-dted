@@ -12,7 +12,7 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public static function index()
     {
         // select ost_thread_event.* from ost_thread_event,
         // (select thread_id,max(`timestamp`) as timestamp from ost_thread_event group by thread_id) max_thread
@@ -29,14 +29,12 @@ class DashboardController extends Controller
         //     FROM ost_thread_event
         //     GROUP BY thread_id
         // );
-        return $this->ticketCreated();
+        return DashboardController::ticketsClosed();
     }
 
     public static function ticketCreated()
     {
-        // Show tickets created
-        // SELECT * FROM `ost_thread_event` WHERE `thread_id` != 0 AND `state` = 'created'  AND thread_id is not null ORDER BY thread_id ASC
-        $sql = "SELECT 
+        $sql = "SELECT
             ost_ticket.number AS chamado,
             ost_ticket.ticket_id,
             ost_thread_event.username AS usuario,
@@ -57,51 +55,125 @@ class DashboardController extends Controller
             ";
         return DB::connection('mysql2')->select($sql);
 
-        // return DB::connection('mysql2')
-        //     ->table('ost_thread_event')
-        //     ->select(
-                // 'ost_ticket.number as Chamado',
-                // 'ost_thread_event.username as Usuario',
-                // 'ost_ticket__cdata.subject',
-                // 'ost_thread_event.state',
-                // 'ost_thread_event.timestamp as Envio'
-        //     )
-        // // ->select('ost_thread.*')
-        //     ->join('ost_thread', 'ost_thread.id', '=', 'ost_thread_event.thread_id')
-        //     ->join('ost_ticket', 'ost_ticket.ticket_id', '=', 'ost_thread.object_id')
-        //     ->join('ost_ticket__cdata', 'ost_ticket__cdata.ticket_id', '=', 'ost_ticket.ticket_id')
-        //     ->where('ost_thread_event.thread_id', '<>', 0)
-        //     ->where('ost_thread_event.state', '=', 'created')
-        // // ->where(function ($query) {
-        // //     $query->whereIn('id', '>', 100);
-        // // })
-        //     ->orderBy('ost_thread_event.thread_id', 'ASC')
-        //     ->get();
     }
 
-    public function ticketsClosed()
+    public static function ticketsClosed()
     {
-
+        $sql = "SELECT
+        ost_ticket.number AS chamado,
+        ost_ticket.ticket_id,
+        ost_thread_event.username AS usuario,
+        ost_ticket__cdata.subject AS assunto,
+        ost_thread_event.state AS status_evento,
+        ost_ticket_status.name AS status_chamado,
+        ost_ticket.lastupdate AS ultima_atualizacao,
+        ost_ticket.created AS envio
+        FROM ost_thread_event
+        left JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+        left JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
+        left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+        left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
+        AND ost_ticket.status_id = 3
+        ORDER BY ost_thread_event.thread_id ASC
+        ";
+        return DB::connection('mysql2')->select($sql);
+    }
+    // 'created','closed','reopened','assigned','transferred','overdue','edited','viewed','error','collab','resent'
+    public static function ticketsReopened()
+    {
+        $sql = "SELECT
+        ost_ticket.number AS chamado,
+        ost_ticket.ticket_id,
+        ost_thread_event.username AS usuario,
+        ost_ticket__cdata.subject AS assunto,
+        ost_thread_event.state AS status_evento,
+        ost_ticket_status.name AS status_chamado,
+        ost_ticket.lastupdate AS ultima_atualizacao,
+        ost_ticket.created AS envio
+        FROM ost_thread_event
+        left JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+        left JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
+        left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+        left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
+        AND ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='reopened' GROUP BY ost_thread_event.thread_id)
+        AND ost_ticket.status_id IN (1,6)
+        ORDER BY ost_thread_event.thread_id ASC
+        ";
+        return DB::connection('mysql2')->select($sql);
     }
 
-    public function ticketsReopened()
+    public static function ticketsAssigned()
     {
-
+        $sql = "SELECT
+        ost_ticket.number AS chamado,
+        ost_ticket.ticket_id,
+        ost_thread_event.username AS usuario,
+        ost_ticket__cdata.subject AS assunto,
+        ost_thread_event.state AS status_evento,
+        ost_ticket_status.name AS status_chamado,
+        ost_ticket.lastupdate AS ultima_atualizacao,
+        ost_ticket.created AS envio
+        FROM ost_thread_event
+        left JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+        left JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
+        left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+        left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
+        AND ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='assigned' GROUP BY ost_thread_event.thread_id)
+        AND ost_ticket.status_id IN (1,6)
+        ORDER BY ost_thread_event.thread_id ASC
+        ";
+        return DB::connection('mysql2')->select($sql);
     }
 
-    public function ticketsAssigned()
+    public static function ticketsTransferred()
     {
-
+        $sql = "SELECT
+        ost_ticket.number AS chamado,
+        ost_ticket.ticket_id,
+        ost_thread_event.username AS usuario,
+        ost_ticket__cdata.subject AS assunto,
+        ost_thread_event.state AS status_evento,
+        ost_ticket_status.name AS status_chamado,
+        ost_ticket.lastupdate AS ultima_atualizacao,
+        ost_ticket.created AS envio
+        FROM ost_thread_event
+        left JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+        left JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
+        left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+        left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
+        AND ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='transferred' GROUP BY ost_thread_event.thread_id)
+        AND ost_ticket.status_id IN (1,6)
+        ORDER BY ost_thread_event.thread_id ASC
+        ";
+        return DB::connection('mysql2')->select($sql);
     }
 
-    public function ticketsTransferred()
+    public static function ticketsOverdue()
     {
-
-    }
-
-    public function ticketsOverdue()
-    {
-
+        $sql = "SELECT
+        ost_ticket.number AS chamado,
+        ost_ticket.ticket_id,
+        ost_thread_event.username AS usuario,
+        ost_ticket__cdata.subject AS assunto,
+        ost_thread_event.state AS status_evento,
+        ost_ticket_status.name AS status_chamado,
+        ost_ticket.lastupdate AS ultima_atualizacao,
+        ost_ticket.created AS envio
+        FROM ost_thread_event
+        left JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+        left JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
+        left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+        left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
+        AND ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='overdue' GROUP BY ost_thread_event.thread_id)
+        AND ost_ticket.status_id IN (1,6)
+        ORDER BY ost_thread_event.thread_id ASC
+        ";
+        return DB::connection('mysql2')->select($sql);
     }
 
     /**

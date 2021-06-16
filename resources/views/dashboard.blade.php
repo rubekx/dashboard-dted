@@ -1,3 +1,9 @@
+@php $ticketCreated = App\Http\Controllers\DashboardController::ticketCreated(); @endphp
+@php $ticketsClosed = App\Http\Controllers\DashboardController::ticketsClosed(); @endphp
+@php $ticketsReopened = App\Http\Controllers\DashboardController::ticketsReopened(); @endphp
+@php $ticketsTransferred = App\Http\Controllers\DashboardController::ticketsTransferred(); @endphp
+@php $ticketsOverdue = App\Http\Controllers\DashboardController::ticketsOverdue(); @endphp
+
 <x-app-layout>
     <!--Regular Datatables CSS-->
     <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -126,7 +132,7 @@
     <div class="py-12">
         <div class="flex flex-wrap">
             <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"
-                onclick="document.getElementById('myModal').showModal()"">
+                onclick="document.getElementById('myModalCriado').showModal()"">
                 <!--Metric Card-->
                 <div class=" bg-white border rounded p-5 bg-ost-blue">
                 <div class="flex flex-row items-center">
@@ -136,7 +142,7 @@
                     </div>
                     <div class="flex-1 text-right md:text-center">
                         <h5 class="font-bold uppercase text-white">Criado</h5>
-                        <h3 class="font-bold text-4xl text-white">X</h3>
+                        <h3 class="font-bold text-4xl text-white">{{count($ticketCreated)}}</h3>
                     </div>
 
                 </div>
@@ -144,7 +150,7 @@
             <!--/Metric Card-->
         </div>
         <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"
-            onclick="document.getElementById('myModal').showModal()">
+            onclick="document.getElementById('myModalFechado').showModal()">
             <!--Metric Card-->
             <div class="bg-white border rounded p-5 bg-ost-green">
                 <div class="flex flex-row items-center">
@@ -154,14 +160,14 @@
                     </div>
                     <div class="flex-1 text-right md:text-center">
                         <h5 class="font-bold uppercase text-white">Fechado</h5>
-                        <h3 class="font-bold text-4xl text-white">X</h3>
+                        <h3 class="font-bold text-4xl text-white">{{count($ticketsClosed)}}</h3>
                     </div>
                 </div>
             </div>
             <!--/Metric Card-->
         </div>
         <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"
-            onclick="document.getElementById('myModal').showModal()">
+            onclick="document.getElementById('myModalReaberto').showModal()">
             <!--Metric Card-->
             <div class="bg-white border rounded bg-gray-400 p-5">
                 <div class="flex flex-row items-center">
@@ -171,14 +177,14 @@
                     </div>
                     <div class="flex-1 text-right md:text-center">
                         <h5 class="font-bold uppercase text-white">Reaberto</h5>
-                        <h3 class="font-bold text-4xl text-white">X</h3>
+                        <h3 class="font-bold text-4xl text-white">{{count($ticketsReopened)}}</h3>
                     </div>
                 </div>
             </div>
             <!--/Metric Card-->
         </div>
         <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"
-            onclick="document.getElementById('myModal').showModal()">
+            onclick="document.getElementById('myModalTransferido').showModal()">
             <!--Metric Card-->
             <div class="bg-white border rounded bg-ost-yelow p-5">
                 <div class="flex flex-row items-center">
@@ -188,14 +194,14 @@
                     </div>
                     <div class="flex-1 text-right md:text-center">
                         <h5 class="font-bold uppercase text-white">Transferido</h5>
-                        <h3 class="font-bold text-4xl text-white">X</h3>
+                        <h3 class="font-bold text-4xl text-white">{{count($ticketsTransferred)}}</h3>
                     </div>
                 </div>
             </div>
             <!--/Metric Card-->
         </div>
         <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"
-            onclick="document.getElementById('myModal').showModal()">
+            onclick="document.getElementById('myModalAtrasado').showModal()">
             <!--Metric Card-->
             <div class="bg-white border rounded bg-ost-purple p-5">
                 <div class="flex flex-row items-center">
@@ -205,7 +211,7 @@
                     </div>
                     <div class="flex-1 text-right md:text-center">
                         <h5 class="font-bold uppercase text-white">Atrasado</h5>
-                        <h3 class="font-bold text-4xl text-white">X</h3>
+                        <h3 class="font-bold text-4xl text-white">{{count($ticketsOverdue)}}</h3>
                     </div>
                 </div>
             </div>
@@ -215,14 +221,14 @@
     </div>
 
 
-    <dialog id="myModal" class="h-auto w-11/12 md:w-1/1 p-5 bg-white rounded-md ">
+    <dialog id="myModalCriado" class="h-auto w-11/12 md:w-1/1 p-5 bg-white rounded-md ">
         <div class="flex flex-col w-full h-auto">
             <!-- Header -->
             <div class="flex w-full h-auto justify-center items-center">
                 <div class="flex w-10/12 h-auto py-3 justify-center items-center text-2xl font-bold">
                     Modal Header
                 </div>
-                <div onclick="document.getElementById('myModal').close();"
+                <div onclick="document.getElementById('myModalCriado').close();"
                     class="flex w-1/12 h-auto justify-center cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -233,8 +239,7 @@
                 </div>
                 <!--Header End-->
             </div>
-            @php $tickets = App\Http\Controllers\DashboardController::ticketCreated(); @endphp
-            <table id="example" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+            <table id="example1" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
                 <thead>
                     <tr>
                         <th data-priority="1">Chamado</th>
@@ -248,7 +253,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ( $tickets as $ticket )
+                    @foreach ( $ticketCreated as $ticket )
                     <tr>
                         <td>{{ $ticket->chamado}}</td>
                         <td>{{ $ticket->ticket_id}}</td>
@@ -260,19 +265,220 @@
                         <td>{{ $ticket->envio}}</td>
                     </tr>
                     @endforeach
-                </tbody </table> </div> </dialog> <!-- jQuery -->
-                <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-                <!--Datatables -->
-                <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-                <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-                <script>
-                    $(document).ready(function() {
-			
-			var table = $('#example').DataTable( {
-					responsive: true
-				} )
-				.columns.adjust()
-				.responsive.recalc();
-		} );
-                </script>
+                </tbody 
+            </table> 
+        </div> 
+    </dialog> 
+
+    <dialog id="myModalFechado" class="h-auto w-11/12 md:w-1/1 p-5 bg-white rounded-md ">
+        <div class="flex flex-col w-full h-auto">
+            <!-- Header -->
+            <div class="flex w-full h-auto justify-center items-center">
+                <div class="flex w-10/12 h-auto py-3 justify-center items-center text-2xl font-bold">
+                    Modal Header
+                </div>
+                <div onclick="document.getElementById('myModalFechado').close();"
+                    class="flex w-1/12 h-auto justify-center cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </div>
+                <!--Header End-->
+            </div>
+            <table id="example2" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+                <thead>
+                    <tr>
+                        <th data-priority="1">Chamado</th>
+                        <th data-priority="2">Ticket</th>
+                        <th data-priority="3">Usuário</th>
+                        <th data-priority="4">Assunto</th>
+                        <th data-priority="5">Status do evento</th>
+                        <th data-priority="6">Status do chamado</th>
+                        <th data-priority="7">Última atualização</th>
+                        <th data-priority="8">Data do Envio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ( $ticketsClosed as $ticket )
+                    <tr>
+                        <td>{{ $ticket->chamado}}</td>
+                        <td>{{ $ticket->ticket_id}}</td>
+                        <td>{{ $ticket->usuario}}</td>
+                        <td>{{ $ticket->assunto}}</td>
+                        <td>{{ $ticket->status_evento}}</td>
+                        <td>{{ $ticket->status_chamado}}</td>
+                        <td>{{ $ticket->ultima_atualizacao}}</td>
+                        <td>{{ $ticket->envio}}</td>
+                    </tr>
+                    @endforeach
+                </tbody 
+            </table> 
+        </div> 
+    </dialog> 
+
+    <dialog id="myModalReaberto" class="h-auto w-11/12 md:w-1/1 p-5 bg-white rounded-md ">
+        <div class="flex flex-col w-full h-auto">
+            <!-- Header -->
+            <div class="flex w-full h-auto justify-center items-center">
+                <div class="flex w-10/12 h-auto py-3 justify-center items-center text-2xl font-bold">
+                    Modal Header
+                </div>
+                <div onclick="document.getElementById('myModalReaberto').close();"
+                    class="flex w-1/12 h-auto justify-center cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </div>
+                <!--Header End-->
+            </div>
+            <table id="example3" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+                <thead>
+                    <tr>
+                        <th data-priority="1">Chamado</th>
+                        <th data-priority="2">Ticket</th>
+                        <th data-priority="3">Usuário</th>
+                        <th data-priority="4">Assunto</th>
+                        <th data-priority="5">Status do evento</th>
+                        <th data-priority="6">Status do chamado</th>
+                        <th data-priority="7">Última atualização</th>
+                        <th data-priority="8">Data do Envio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ( $ticketsReopened as $ticket )
+                    <tr>
+                        <td>{{ $ticket->chamado}}</td>
+                        <td>{{ $ticket->ticket_id}}</td>
+                        <td>{{ $ticket->usuario}}</td>
+                        <td>{{ $ticket->assunto}}</td>
+                        <td>{{ $ticket->status_evento}}</td>
+                        <td>{{ $ticket->status_chamado}}</td>
+                        <td>{{ $ticket->ultima_atualizacao}}</td>
+                        <td>{{ $ticket->envio}}</td>
+                    </tr>
+                    @endforeach
+                </tbody 
+            </table> 
+        </div> 
+    </dialog> 
+
+    <dialog id="myModalTransferido" class="h-auto w-11/12 md:w-1/1 p-5 bg-white rounded-md ">
+        <div class="flex flex-col w-full h-auto">
+            <!-- Header -->
+            <div class="flex w-full h-auto justify-center items-center">
+                <div class="flex w-10/12 h-auto py-3 justify-center items-center text-2xl font-bold">
+                    Modal Header
+                </div>
+                <div onclick="document.getElementById('myModalTransferido').close();"
+                    class="flex w-1/12 h-auto justify-center cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </div>
+                <!--Header End-->
+            </div>
+            <table id="example4" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+                <thead>
+                    <tr>
+                        <th data-priority="1">Chamado</th>
+                        <th data-priority="2">Ticket</th>
+                        <th data-priority="3">Usuário</th>
+                        <th data-priority="4">Assunto</th>
+                        <th data-priority="5">Status do evento</th>
+                        <th data-priority="6">Status do chamado</th>
+                        <th data-priority="7">Última atualização</th>
+                        <th data-priority="8">Data do Envio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ( $ticketsTransferred as $ticket )
+                    <tr>
+                        <td>{{ $ticket->chamado}}</td>
+                        <td>{{ $ticket->ticket_id}}</td>
+                        <td>{{ $ticket->usuario}}</td>
+                        <td>{{ $ticket->assunto}}</td>
+                        <td>{{ $ticket->status_evento}}</td>
+                        <td>{{ $ticket->status_chamado}}</td>
+                        <td>{{ $ticket->ultima_atualizacao}}</td>
+                        <td>{{ $ticket->envio}}</td>
+                    </tr>
+                    @endforeach
+                </tbody 
+            </table> 
+        </div> 
+    </dialog> 
+
+    <dialog id="myModalAtrasado" class="h-auto w-11/12 md:w-1/1 p-5 bg-white rounded-md ">
+        <div class="flex flex-col w-full h-auto">
+            <!-- Header -->
+            <div class="flex w-full h-auto justify-center items-center">
+                <div class="flex w-10/12 h-auto py-3 justify-center items-center text-2xl font-bold">
+                    Modal Header
+                </div>
+                <div onclick="document.getElementById('myModalAtrasado').close();"
+                    class="flex w-1/12 h-auto justify-center cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </div>
+                <!--Header End-->
+            </div>
+            <table id="example5" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+                <thead>
+                    <tr>
+                        <th data-priority="1">Chamado</th>
+                        <th data-priority="2">Ticket</th>
+                        <th data-priority="3">Usuário</th>
+                        <th data-priority="4">Assunto</th>
+                        <th data-priority="5">Status do evento</th>
+                        <th data-priority="6">Status do chamado</th>
+                        <th data-priority="7">Última atualização</th>
+                        <th data-priority="8">Data do Envio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ( $ticketsOverdue as $ticket )
+                    <tr>
+                        <td>{{ $ticket->chamado}}</td>
+                        <td>{{ $ticket->ticket_id}}</td>
+                        <td>{{ $ticket->usuario}}</td>
+                        <td>{{ $ticket->assunto}}</td>
+                        <td>{{ $ticket->status_evento}}</td>
+                        <td>{{ $ticket->status_chamado}}</td>
+                        <td>{{ $ticket->ultima_atualizacao}}</td>
+                        <td>{{ $ticket->envio}}</td>
+                    </tr>
+                    @endforeach
+                </tbody 
+            </table> 
+        </div> 
+    </dialog> 
+
+
+<!-- jQuery -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<!--Datatables -->
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+<script>
+$(document).ready(function() {
+var table = $('#example1,#example2,#example3,#example4,#example5').DataTable( {
+    responsive: true
+    } )
+    .columns.adjust()
+    .responsive.recalc();
+    } );
+</script>
 </x-app-layout>
