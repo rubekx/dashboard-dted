@@ -14,21 +14,6 @@ class DashboardController extends Controller
      */
     public static function index()
     {
-        // select ost_thread_event.* from ost_thread_event,
-        // (select thread_id,max(`timestamp`) as timestamp from ost_thread_event group by thread_id) max_thread
-        // where ost_thread_event.thread_id=max_thread.thread_id
-        // and ost_thread_event.timestamp=max_thread.timestamp;select ost_thread_event.* from ost_thread_event,
-        // (select thread_id,max(`timestamp`) as timestamp from ost_thread_event group by thread_id) max_thread
-        // where ost_thread_event.thread_id=max_thread.thread_id
-        // and ost_thread_event.timestamp=max_thread.timestamp;
-
-        // SELECT *
-        // FROM ost_thread_event
-        // WHERE id IN (
-        //     SELECT MAX(id)
-        //     FROM ost_thread_event
-        //     GROUP BY thread_id
-        // );
         return DashboardController::ticketsClosed();
     }
 
@@ -79,7 +64,9 @@ class DashboardController extends Controller
         ";
         return DB::connection('mysql2')->select($sql);
     }
+    
     // 'created','closed','reopened','assigned','transferred','overdue','edited','viewed','error','collab','resent'
+
     public static function ticketsReopened()
     {
         $sql = "SELECT
