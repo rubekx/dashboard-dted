@@ -236,11 +236,14 @@
                             <th data-priority="1">Chamado</th>
                             <th data-priority="2">Ticket</th>
                             <th data-priority="3">Usuário</th>
-                            <th data-priority="4">Assunto</th>
-                            <th data-priority="5">Status do evento</th>
-                            <th data-priority="6">Status do chamado</th>
-                            <th data-priority="7">Última atualização</th>
-                            <th data-priority="8">Data do Envio</th>
+                            <th data-priority="4">Email</th>
+                            <th data-priority="5">Telefone</th>
+                            <th data-priority="6">Curso</th>
+                            <th data-priority="7">Assunto</th>
+                            <th data-priority="8">Status do evento</th>
+                            <th data-priority="9">Status do chamado</th>
+                            <th data-priority="10">Última atualização</th>
+                            <th data-priority="11">Data do Envio</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -249,6 +252,9 @@
                             <td>{{ $ticket->chamado}}</td>
                             <td>{{ $ticket->ticket_id}}</td>
                             <td>{{ $ticket->usuario}}</td>
+                            <td>{{ $ticket->email}}</td>
+                            <td>{{ $ticket->telefone}}</td>
+                            <td>{{ $ticket->curso}}</td>
                             <td>{{ $ticket->assunto}}</td>
                             <td>{{ $ticket->status_evento}}</td>
                             <td>{{ $ticket->status_chamado}}</td>
@@ -293,11 +299,14 @@
                             <th data-priority="1">Chamado</th>
                             <th data-priority="2">Ticket</th>
                             <th data-priority="3">Usuário</th>
-                            <th data-priority="4">Assunto</th>
-                            <th data-priority="5">Status do evento</th>
-                            <th data-priority="6">Status do chamado</th>
-                            <th data-priority="7">Última atualização</th>
-                            <th data-priority="8">Data do Envio</th>
+                            <th data-priority="4">Email</th>
+                            <th data-priority="5">Telefone</th>
+                            <th data-priority="6">Curso</th>
+                            <th data-priority="7">Assunto</th>
+                            <th data-priority="8">Status do evento</th>
+                            <th data-priority="9">Status do chamado</th>
+                            <th data-priority="10">Última atualização</th>
+                            <th data-priority="11">Data do Envio</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -306,6 +315,9 @@
                             <td>{{ $ticket->chamado}}</td>
                             <td>{{ $ticket->ticket_id}}</td>
                             <td>{{ $ticket->usuario}}</td>
+                            <td>{{ $ticket->email}}</td>
+                            <td>{{ $ticket->telefone}}</td>
+                            <td>{{ $ticket->curso}}</td>
                             <td>{{ $ticket->assunto}}</td>
                             <td>{{ $ticket->status_evento}}</td>
                             <td>{{ $ticket->status_chamado}}</td>
@@ -350,11 +362,14 @@
                             <th data-priority="1">Chamado</th>
                             <th data-priority="2">Ticket</th>
                             <th data-priority="3">Usuário</th>
-                            <th data-priority="4">Assunto</th>
-                            <th data-priority="5">Status do evento</th>
-                            <th data-priority="6">Status do chamado</th>
-                            <th data-priority="7">Última atualização</th>
-                            <th data-priority="8">Data do Envio</th>
+                            <th data-priority="4">Email</th>
+                            <th data-priority="5">Telefone</th>
+                            <th data-priority="6">Curso</th>
+                            <th data-priority="7">Assunto</th>
+                            <th data-priority="8">Status do evento</th>
+                            <th data-priority="9">Status do chamado</th>
+                            <th data-priority="10">Última atualização</th>
+                            <th data-priority="11">Data do Envio</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -363,6 +378,9 @@
                             <td>{{ $ticket->chamado}}</td>
                             <td>{{ $ticket->ticket_id}}</td>
                             <td>{{ $ticket->usuario}}</td>
+                            <td>{{ $ticket->email}}</td>
+                            <td>{{ $ticket->telefone}}</td>
+                            <td>{{ $ticket->curso}}</td>
                             <td>{{ $ticket->assunto}}</td>
                             <td>{{ $ticket->status_evento}}</td>
                             <td>{{ $ticket->status_chamado}}</td>
@@ -407,11 +425,14 @@
                             <th data-priority="1">Chamado</th>
                             <th data-priority="2">Ticket</th>
                             <th data-priority="3">Usuário</th>
-                            <th data-priority="4">Assunto</th>
-                            <th data-priority="5">Status do evento</th>
-                            <th data-priority="6">Status do chamado</th>
-                            <th data-priority="7">Última atualização</th>
-                            <th data-priority="8">Data do Envio</th>
+                            <th data-priority="4">Email</th>
+                            <th data-priority="5">Telefone</th>
+                            <th data-priority="6">Curso</th>
+                            <th data-priority="7">Assunto</th>
+                            <th data-priority="8">Status do evento</th>
+                            <th data-priority="9">Status do chamado</th>
+                            <th data-priority="10">Última atualização</th>
+                            <th data-priority="11">Data do Envio</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -420,6 +441,9 @@
                             <td>{{ $ticket->chamado}}</td>
                             <td>{{ $ticket->ticket_id}}</td>
                             <td>{{ $ticket->usuario}}</td>
+                            <td>{{ $ticket->email}}</td>
+                            <td>{{ $ticket->telefone}}</td>
+                            <td>{{ $ticket->curso}}</td>
                             <td>{{ $ticket->assunto}}</td>
                             <td>{{ $ticket->status_evento}}</td>
                             <td>{{ $ticket->status_chamado}}</td>
@@ -464,11 +488,14 @@
                             <th data-priority="1">Chamado</th>
                             <th data-priority="2">Ticket</th>
                             <th data-priority="3">Usuário</th>
-                            <th data-priority="4">Assunto</th>
-                            <th data-priority="5">Status do evento</th>
-                            <th data-priority="6">Status do chamado</th>
-                            <th data-priority="7">Última atualização</th>
-                            <th data-priority="8">Data do Envio</th>
+                            <th data-priority="4">Email</th>
+                            <th data-priority="5">Telefone</th>
+                            <th data-priority="6">Curso</th>
+                            <th data-priority="7">Assunto</th>
+                            <th data-priority="8">Status do evento</th>
+                            <th data-priority="9">Status do chamado</th>
+                            <th data-priority="10">Última atualização</th>
+                            <th data-priority="11">Data do Envio</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -477,6 +504,9 @@
                             <td>{{ $ticket->chamado}}</td>
                             <td>{{ $ticket->ticket_id}}</td>
                             <td>{{ $ticket->usuario}}</td>
+                            <td>{{ $ticket->email}}</td>
+                            <td>{{ $ticket->telefone}}</td>
+                            <td>{{ $ticket->curso}}</td>
                             <td>{{ $ticket->assunto}}</td>
                             <td>{{ $ticket->status_evento}}</td>
                             <td>{{ $ticket->status_chamado}}</td>
@@ -489,6 +519,9 @@
             </div>
             <!--footer-->
             <div class="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                <button class="text-blue-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleModal('ticketsOverdue')">
+                    Enviar email 
+                </button>
                 <button class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleModal('ticketsOverdue')">
                 Fechar
                 </button>

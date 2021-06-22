@@ -14,7 +14,7 @@ class DashboardController extends Controller
      */
     public static function index()
     {
-        return DashboardController::ticketsClosed();
+        return DashboardController::ticketCreated();
     }
 
     public static function ticketCreated()
@@ -22,7 +22,10 @@ class DashboardController extends Controller
         $sql = "SELECT
             ost_ticket.number AS chamado,
             ost_ticket.ticket_id,
-            ost_thread_event.username AS usuario,
+            ost_user.name AS usuario,
+            ost_user_email.address AS email,
+            ost_user__cdata.phone AS telefone,
+            ost_help_topic.topic AS curso,
             ost_ticket__cdata.subject AS assunto,
             ost_thread_event.state AS status_evento,
             ost_ticket_status.name AS status_chamado,
@@ -33,6 +36,11 @@ class DashboardController extends Controller
             left JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
             left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
             left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+            LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
+            LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
+            LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
+            LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
+
             WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
             -- AND ost_thread_event.thread_id <> 0
             -- AND ost_thread_event.thread_id is not null
@@ -46,8 +54,11 @@ class DashboardController extends Controller
     {
         $sql = "SELECT
         ost_ticket.number AS chamado,
-        ost_ticket.ticket_id,
-        ost_thread_event.username AS usuario,
+        ost_ticket.ticket_id,            
+        ost_user.name AS usuario,
+            ost_user_email.address AS email,
+            ost_user__cdata.phone AS telefone,
+            ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
         ost_thread_event.state AS status_evento,
         ost_ticket_status.name AS status_chamado,
@@ -58,21 +69,28 @@ class DashboardController extends Controller
         left JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
         left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
         left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
+        LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
+        LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
+            LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
         WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id = 3
         ORDER BY ost_thread_event.thread_id ASC
         ";
         return DB::connection('mysql2')->select($sql);
     }
-    
+
     // 'created','closed','reopened','assigned','transferred','overdue','edited','viewed','error','collab','resent'
 
     public static function ticketsReopened()
     {
         $sql = "SELECT
         ost_ticket.number AS chamado,
-        ost_ticket.ticket_id,
-        ost_thread_event.username AS usuario,
+        ost_ticket.ticket_id,            
+        ost_user.name AS usuario,
+            ost_user_email.address AS email,
+            ost_user__cdata.phone AS telefone,
+            ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
         ost_thread_event.state AS status_evento,
         ost_ticket_status.name AS status_chamado,
@@ -83,6 +101,10 @@ class DashboardController extends Controller
         left JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
         left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
         left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+            LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
+            LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
+            LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
+            LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
         WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
         AND ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='reopened' GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id IN (1,6)
@@ -96,7 +118,10 @@ class DashboardController extends Controller
         $sql = "SELECT
         ost_ticket.number AS chamado,
         ost_ticket.ticket_id,
-        ost_thread_event.username AS usuario,
+        ost_user.name AS usuario,
+            ost_user_email.address AS email,
+            ost_user__cdata.phone AS telefone,
+            ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
         ost_thread_event.state AS status_evento,
         ost_ticket_status.name AS status_chamado,
@@ -107,6 +132,10 @@ class DashboardController extends Controller
         left JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
         left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
         left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
+        LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
+        LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
+            LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
         WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
         AND ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='assigned' GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id IN (1,6)
@@ -120,7 +149,10 @@ class DashboardController extends Controller
         $sql = "SELECT
         ost_ticket.number AS chamado,
         ost_ticket.ticket_id,
-        ost_thread_event.username AS usuario,
+        ost_user.name AS usuario,
+            ost_user_email.address AS email,
+            ost_user__cdata.phone AS telefone,
+            ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
         ost_thread_event.state AS status_evento,
         ost_ticket_status.name AS status_chamado,
@@ -130,7 +162,11 @@ class DashboardController extends Controller
         left JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
         left JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
         left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-        left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id    
+        LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
+        LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
+        LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
+            LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
         WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
         AND ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='transferred' GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id IN (1,6)
@@ -144,7 +180,10 @@ class DashboardController extends Controller
         $sql = "SELECT
         ost_ticket.number AS chamado,
         ost_ticket.ticket_id,
-        ost_thread_event.username AS usuario,
+        ost_user.name AS usuario,
+            ost_user_email.address AS email,
+            ost_user__cdata.phone AS telefone,
+            ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
         ost_thread_event.state AS status_evento,
         ost_ticket_status.name AS status_chamado,
@@ -155,6 +194,10 @@ class DashboardController extends Controller
         left JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
         left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
         left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
+        LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
+        LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
+            LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
         WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
         AND ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='overdue' GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id IN (1,6)
