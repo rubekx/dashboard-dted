@@ -22,8 +22,10 @@ Route::get('/', function () {
     return redirect()->route('login');
 })->middleware('guest');
 
-Route::get('/dashboard', function () {    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+// Route::get('/dashboard', function () {    return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
+
+Route::get('/dashboard', [DashboardController::class, 'indexTable'])->middleware(['auth'])->name('dashboard');
 
 Route::get('/criados', [DashboardController::class, 'index'])->middleware(['auth'])->name('criados');
 
