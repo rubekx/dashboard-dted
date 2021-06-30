@@ -210,10 +210,12 @@ class DashboardController extends Controller
     public static function indexTable(Request $request)
     {
         info($request);
+        info('asas');
+        info('sasasasa');
         if ($request->ajax()) {
             // $data = User::latest()->get();
             $data = DashboardController::ticketCreated();
-            // info($data);
+            info($data);
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){

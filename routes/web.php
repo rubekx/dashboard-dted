@@ -30,3 +30,7 @@ Route::get('/dashboard', [DashboardController::class, 'indexTable'])->middleware
 Route::get('/criados', [DashboardController::class, 'index'])->middleware(['auth'])->name('criados');
 
 require __DIR__.'/auth.php';
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
