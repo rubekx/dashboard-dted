@@ -1,4 +1,4 @@
-@php $ticketCreated = App\Http\Controllers\DashboardController::ticketCreated(); @endphp
+@php $ticketsCreated = App\Http\Controllers\DashboardController::ticketsCreated(); @endphp
 @php $ticketsClosed = App\Http\Controllers\DashboardController::ticketsClosed(); @endphp
 @php $ticketsReopened = App\Http\Controllers\DashboardController::ticketsReopened(); @endphp
 @php $ticketsTransferred = App\Http\Controllers\DashboardController::ticketsTransferred(); @endphp
@@ -131,7 +131,7 @@
     </x-slot>
     
         <div class="flex flex-wrap">
-        <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer" onclick="toggleModal('ticketCreated')">
+        <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer" onclick="toggleModal('ticketsCreated')">
             <div class=" bg-white border rounded p-5 bg-ost-blue">
                 <div class="flex flex-row items-center">
                     <div class="flex-shrink pr-4">
@@ -141,7 +141,7 @@
                     </div>
                     <div class="flex-1 text-right md:text-center">
                         <h5 class="font-bold uppercase text-white">Criados</h5>
-                        <h3 class="font-bold text-4xl text-white">{{count($ticketCreated)}}</h3>
+                        <h3 class="font-bold text-4xl text-white">{{count($ticketsCreated)}}</h3>
                     </div>
                 </div>
             </div>
@@ -212,7 +212,7 @@
         </div>
     </div>
 
-    <div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="ticketCreated">
+    <div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="ticketsCreated">
         {{-- <div class="relative w-auto my-6 mx-auto max-w-6xl"> --}}
             <div class="relative w-100 my-6 mx-auto ">
             <!--content-->
@@ -222,7 +222,7 @@
                 <h3 class="text-3xl font-semibold">
                 Chamados Criados
                 </h3>
-                <button class="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal('ticketCreated')">
+                <button class="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal('ticketsCreated')">
                 <span class="text-black text-2xl">
                 x
                 </span>
@@ -247,7 +247,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ( $ticketCreated as $ticket )
+                        @foreach ( $ticketsCreated as $ticket )
                         <tr>
                             <td>{{ $ticket->chamado}}</td>
                             <td>{{ $ticket->ticket_id}}</td>
@@ -267,7 +267,7 @@
             </div>
             <!--footer-->
             <div class="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-                <button class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleModal('ticketCreated')">
+                <button class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleModal('ticketsCreated')">
                 Fechar
                 </button>
             </div>
@@ -530,7 +530,7 @@
         </div>
     </div>
 
-    <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="ticketCreated-backdrop"></div>
+    <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="ticketsCreated-backdrop"></div>
     <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="ticketsClosed-backdrop"></div>
     <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="ticketsReopened-backdrop"></div>
     <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="ticketsTransferred-backdrop"></div>
