@@ -20,7 +20,7 @@ class DashboardController extends Controller
 
     public static function ticketsCreated($count = null)
     {
-        $select = $count == null ? "ost_ticket.ticket_id as id,
+        $select = $count == null ? "ost_ticket.ticket_id,
         ost_ticket.number AS chamado,
         ost_ticket.ticket_id,
         ost_user.name AS usuario,
@@ -213,6 +213,32 @@ class DashboardController extends Controller
         return DB::connection('mysql2')->select($sql);
     }
 
+    public static function ticketsTableAjax(Request $request)
+    {
+        if ($request->ajax()) {
+            if ($request->type == 1) {
+                $data = DashboardController::ticketsCreated();
+            } elseif ($request->type == 2) {
+                $data = DashboardController::ticketsClosed();
+            } elseif ($request->type == 3) {
+                $data = DashboardController::ticketsReopened();
+            } elseif ($request->type == 4) {
+                $data = DashboardController::ticketsTransferred();
+            } else {
+                $data = DashboardController::ticketsOverdue();
+            }
+            return Datatables::of($data)
+                // ->addIndexColumn()
+                // ->addColumn('action', function ($row) {
+                //     $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->ticket_id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editCustomer">Edit</a>';
+                //     $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->ticket_id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteCustomer">Delete</a>';
+                //     return $btn;
+                // })
+                // ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
     public static function indexTable(Request $request)
     {
         $ticketsCreated = DashboardController::ticketsCreated(1);
@@ -220,21 +246,22 @@ class DashboardController extends Controller
         $ticketsReopened = DashboardController::ticketsReopened(1);
         $ticketsTransferred = DashboardController::ticketsTransferred(1);
         $ticketsOverdue = DashboardController::ticketsOverdue(1);
-        if ($request->ajax()) {
-            $data = DashboardController::ticketsCreated();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
+        // if ($request->ajax()) {
+        //     info($request->ajax());
+        //     $data = DashboardController::ticketsCreated();
+        //     return Datatables::of($data)
+        //         ->addIndexColumn()
+        //         ->addColumn('action', function ($row) {
 
-                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editCustomer">Edit</a>';
+        //             $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->ticket_id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editCustomer">Edit</a>';
 
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteCustomer">Delete</a>';
+        //             $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->ticket_id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteCustomer">Delete</a>';
 
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
+        //             return $btn;
+        //         })
+        //         ->rawColumns(['action'])
+        //         ->make(true);
+        // }
         return view('dashboard')
             ->with([
                 'ticketsCreated' => $ticketsCreated[0]->total,

@@ -1,5 +1,5 @@
 <div class="flex flex-wrap">
-    <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer" onclick="toggleModal('ticketsCreated')">
+    <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"  data-toggle="modal" data-target="#modalTicketsCreated">
         <div class="border rounded p-5 bg-ost-blue" >
             <div class="flex flex-row items-center">
                 <div class="flex-shrink pr-4">
@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer" onclick="toggleModal('ticketsClosed')">
+    <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"  data-toggle="modal" data-target="#modalTicketsClosed">
         <!--Metric Card-->
         <div class="border rounded p-5 bg-ost-green">
             <div class="flex flex-row items-center">
@@ -30,7 +30,7 @@
         </div>
         <!--/Metric Card-->
     </div>
-    <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer" onclick="toggleModal('ticketsReopened')">
+    <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"  data-toggle="modal" data-target="#modalTicketsReopened">
         <!--Metric Card-->
         <div class=" border rounded bg-gray-400 p-5">
             <div class="flex flex-row items-center">
@@ -46,7 +46,7 @@
         </div>
         <!--/Metric Card-->
     </div>
-    <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer" onclick="toggleModal('ticketsTransferred')">
+    <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"  data-toggle="modal" data-target="#modalTicketsTransferred">
         <!--Metric Card-->
         <div class="border rounded bg-ost-yelow p-5">
             <div class="flex flex-row items-center">
@@ -62,7 +62,7 @@
         </div>
         <!--/Metric Card-->
     </div>
-    <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer" onclick="toggleModal('ticketsOverdue')">
+    <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"  data-toggle="modal" data-target="#modalTicketsOverdue">
         <!--Metric Card-->
         <div class="border rounded bg-ost-purple p-5">
             <div class="flex flex-row items-center">

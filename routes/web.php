@@ -29,4 +29,6 @@ Route::get('/dashboard', [DashboardController::class, 'indexTable'])->middleware
 
 Route::get('/criados', [DashboardController::class, 'index'])->middleware(['auth'])->name('criados');
 
+Route::get('/dashboard/tickets/table', [DashboardController::class, 'ticketsTableAjax'])->middleware(['auth'])->name('dashboard.tickets.table');
+
 require __DIR__.'/auth.php';
