@@ -129,6 +129,7 @@
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Enviar email</button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
         </div>
       </div>
@@ -172,6 +173,7 @@
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Enviar email</button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
         </div>
       </div>
@@ -215,6 +217,7 @@
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Enviar email</button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
         </div>
       </div>
