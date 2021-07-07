@@ -10,7 +10,11 @@
         $('#modalTicketsCreated').on('shown.bs.modal', function() {
             var table = $('#tableTicketsCreated').DataTable({
                 "lengthMenu": [ 5,10, 25, 50, 100 ],
-                // responsive: true,
+                responsive: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    'csv', 'excel'
+                ],
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -40,6 +44,10 @@
         $('#modalTicketsClosed').on('shown.bs.modal', function() {
             var table = $('#tableTicketsClosed').DataTable({
                 "lengthMenu": [ 5,10, 25, 50, 100 ],
+                dom: 'Bfrtip',
+                buttons: [
+                    'csv', 'excel'
+                ],
                 responsive: true,
                 processing: true,
                 serverSide: true,
@@ -69,6 +77,10 @@
         $('#modalTicketsReopened').on('shown.bs.modal', function() {
             var table = $('#tableTicketsReopened').DataTable({
                 "lengthMenu": [ 5,10, 25, 50, 100 ],
+                dom: 'Bfrtip',
+                buttons: [
+                    'csv', 'excel'
+                ],
                 responsive: true,
                 processing: true,
                 serverSide: true,
@@ -98,6 +110,10 @@
         $('#modalTicketsTransferred').on('shown.bs.modal', function() {
             var table = $('#tableTicketsTransferred').DataTable({
                 "lengthMenu": [ 5,10, 25, 50, 100 ],
+                dom: 'Bfrtip',
+                buttons: [
+                    'csv', 'excel'
+                ],
                 responsive: true,
                 processing: true,
                 serverSide: true,
@@ -127,6 +143,10 @@
         $('#modalTicketsOverdue').on('shown.bs.modal', function() {
             var table = $('#tableTicketsOverdue').DataTable({
                 "lengthMenu": [ 5,10, 25, 50, 100 ],
+                dom: 'Bfrtip',
+                buttons: [
+                    'csv', 'excel'
+                ],
                 responsive: true,
                 processing: true,
                 serverSide: true,
