@@ -1,8 +1,3 @@
-{{-- modalTicketsCreated
-modalTicketsClosed
-modalTicketsClosed
-modalTicketsTransferred
-modalTicketsOverdue --}}
 <style>
   @media screen and (min-width: 1200px) {
     .modal-xl {
@@ -23,7 +18,8 @@ modalTicketsOverdue --}}
         </div>
         <!-- Modal body -->
         <div class="modal-body">
-          <table class="table data-table dt-responsive" id="tableTicketsCreated" >
+          <div class="table-responsive">
+          <table class="table data-table table-striped dt-responsive" width="100%" id="tableTicketsCreated">
             <thead>
               <tr>
                 <th>Chamado</th>
@@ -43,6 +39,7 @@ modalTicketsOverdue --}}
             <tbody>
             </tbody>
           </table>
+          </div>
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
@@ -64,7 +61,8 @@ modalTicketsOverdue --}}
         </div>
         <!-- Modal body -->
         <div class="modal-body">
-          <table class="table data-table dt-responsive" id="tableTicketsClosed" >
+          <div class="table-responsive">
+          <table class="table data-table table-striped dt-responsive" id="tableTicketsClosed" >
             <thead>
               <tr>
                 <th>Chamado</th>
@@ -84,6 +82,7 @@ modalTicketsOverdue --}}
             <tbody>
             </tbody>
           </table>
+          </div>
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
@@ -105,7 +104,8 @@ modalTicketsOverdue --}}
         </div>
         <!-- Modal body -->
         <div class="modal-body">
-          <table class="table data-table dt-responsive" id="tableTicketsReopened" >
+          <div class="table-responsive">
+          <table class="table data-table table-striped dt-responsive" id="tableTicketsReopened" >
             <thead>
               <tr>
                 <th>Chamado</th>
@@ -125,6 +125,7 @@ modalTicketsOverdue --}}
             <tbody>
             </tbody>
           </table>
+          </div>
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
@@ -146,7 +147,8 @@ modalTicketsOverdue --}}
         </div>
         <!-- Modal body -->
         <div class="modal-body">
-          <table class="table data-table dt-responsive" id="tableTicketsTransferred" >
+          <div class="table-responsive">
+          <table class="table data-table table-striped dt-responsive" id="tableTicketsTransferred" >
             <thead>
               <tr>
                 <th>Chamado</th>
@@ -166,6 +168,7 @@ modalTicketsOverdue --}}
             <tbody>
             </tbody>
           </table>
+          </div>
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
@@ -187,7 +190,8 @@ modalTicketsOverdue --}}
         </div>
         <!-- Modal body -->
         <div class="modal-body">
-          <table class="table data-table dt-responsive" id="tableTicketsOverdue" >
+          <div class="table-responsive">
+          <table class="table data-table table-striped dt-responsive" id="tableTicketsOverdue" >
             <thead>
               <tr>
                 <th>Chamado</th>
@@ -207,6 +211,7 @@ modalTicketsOverdue --}}
             <tbody>
             </tbody>
           </table>
+          </div>
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
