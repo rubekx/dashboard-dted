@@ -28,10 +28,18 @@ class DashboardController extends Controller
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
-        ost_thread_event.state AS status_evento,
+        CASE 
+            WHEN ost_thread_event.state = 'closed' THEN 'Fechado' 
+            WHEN ost_thread_event.state = 'transferred' THEN 'Transferido' 
+            WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
+            WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado' 
+            WHEN ost_thread_event.state = 'resent' THEN 'Reenviado' 
+            WHEN ost_thread_event.state = 'edited' THEN 'Editado'              
+            ELSE ost_thread_event.state
+        END as status_evento, 
         ost_ticket_status.name AS status_chamado,
-        ost_ticket.lastupdate AS ultima_atualizacao,
-        ost_ticket.created AS envio" : "count(ost_ticket.ticket_id) as total";
+        DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
+        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "count(ost_ticket.ticket_id) as total";
 
         $sql = "SELECT " . $select . "
             FROM ost_thread_event
@@ -61,10 +69,18 @@ class DashboardController extends Controller
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
-        ost_thread_event.state AS status_evento,
+        CASE 
+            WHEN ost_thread_event.state = 'closed' THEN 'Fechado' 
+            WHEN ost_thread_event.state = 'transferred' THEN 'Transferido' 
+            WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
+            WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado' 
+            WHEN ost_thread_event.state = 'resent' THEN 'Reenviado' 
+            WHEN ost_thread_event.state = 'edited' THEN 'Editado'              
+            ELSE ost_thread_event.state
+        END as status_evento, 
         ost_ticket_status.name AS status_chamado,
-        ost_ticket.lastupdate AS ultima_atualizacao,
-        ost_ticket.created AS envio" : "count(ost_ticket.number) as total";
+        DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
+        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "count(ost_ticket.number) as total";
 
         $sql = "SELECT " . $select . "
         FROM ost_thread_event
@@ -92,10 +108,18 @@ class DashboardController extends Controller
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
-        ost_thread_event.state AS status_evento,
+        CASE 
+            WHEN ost_thread_event.state = 'closed' THEN 'Fechado' 
+            WHEN ost_thread_event.state = 'transferred' THEN 'Transferido' 
+            WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
+            WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado' 
+            WHEN ost_thread_event.state = 'resent' THEN 'Reenviado' 
+            WHEN ost_thread_event.state = 'edited' THEN 'Editado'              
+            ELSE ost_thread_event.state
+        END as status_evento, 
         ost_ticket_status.name AS status_chamado,
-        ost_ticket.lastupdate AS ultima_atualizacao,
-        ost_ticket.created AS envio" : "count(ost_ticket.number) as total";
+        DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
+        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "count(ost_ticket.number) as total";
 
         $sql = "SELECT " . $select . "
         FROM ost_thread_event
@@ -124,10 +148,18 @@ class DashboardController extends Controller
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
-        ost_thread_event.state AS status_evento,
+        CASE 
+            WHEN ost_thread_event.state = 'closed' THEN 'Fechado' 
+            WHEN ost_thread_event.state = 'transferred' THEN 'Transferido' 
+            WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
+            WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado' 
+            WHEN ost_thread_event.state = 'resent' THEN 'Reenviado' 
+            WHEN ost_thread_event.state = 'edited' THEN 'Editado'              
+            ELSE ost_thread_event.state
+        END as status_evento, 
         ost_ticket_status.name AS status_chamado,
-        ost_ticket.lastupdate AS ultima_atualizacao,
-        ost_ticket.created AS envio" : "count(ost_ticket.number) as total";
+        DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
+        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "count(ost_ticket.number) as total";
 
         $sql = "SELECT " . $select . "
 
@@ -157,10 +189,18 @@ class DashboardController extends Controller
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
-        ost_thread_event.state AS status_evento,
+        CASE 
+            WHEN ost_thread_event.state = 'closed' THEN 'Fechado' 
+            WHEN ost_thread_event.state = 'transferred' THEN 'Transferido' 
+            WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
+            WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado' 
+            WHEN ost_thread_event.state = 'resent' THEN 'Reenviado' 
+            WHEN ost_thread_event.state = 'edited' THEN 'Editado'              
+            ELSE ost_thread_event.state
+        END as status_evento, 
         ost_ticket_status.name AS status_chamado,
-        ost_ticket.lastupdate AS ultima_atualizacao,
-        ost_ticket.created AS envio" : "count(ost_ticket.number) as total";
+        DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
+        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "count(ost_ticket.number) as total";
 
         $sql = "SELECT " . $select . "
 
@@ -190,10 +230,18 @@ class DashboardController extends Controller
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
-        ost_thread_event.state AS status_evento,
+        CASE 
+            WHEN ost_thread_event.state = 'closed' THEN 'Fechado' 
+            WHEN ost_thread_event.state = 'transferred' THEN 'Transferido' 
+            WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
+            WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado' 
+            WHEN ost_thread_event.state = 'resent' THEN 'Reenviado' 
+            WHEN ost_thread_event.state = 'edited' THEN 'Editado'              
+            ELSE ost_thread_event.state
+        END as status_evento, 
         ost_ticket_status.name AS status_chamado,
-        ost_ticket.lastupdate AS ultima_atualizacao,
-        ost_ticket.created AS envio" : "count(ost_ticket.number) as total";
+        DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
+        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "count(ost_ticket.number) as total";
 
         $sql = "SELECT " . $select . "
         FROM ost_thread_event

@@ -29,9 +29,9 @@
                 <th>Telefone</th>
                 <th>Curso</th>
                 <th>Assunto</th>
-                <th>Status do evento</th>
                 <th>Status do chamado</th>
-                <th>Última atualização</th>
+                <th>Data da Última atualização</th>
+                <th>Status da ultima movimentação</th>
                 <th>Data do Envio</th>
               </tr>
               </tr>
@@ -72,9 +72,9 @@
                 <th>Telefone</th>
                 <th>Curso</th>
                 <th>Assunto</th>
-                <th>Status do evento</th>
                 <th>Status do chamado</th>
-                <th>Última atualização</th>
+                <th>Data da Última atualização</th>
+                <th>Status da ultima movimentação</th>
                 <th>Data do Envio</th>
               </tr>
               </tr>
@@ -115,9 +115,9 @@
                 <th>Telefone</th>
                 <th>Curso</th>
                 <th>Assunto</th>
-                <th>Status do evento</th>
                 <th>Status do chamado</th>
-                <th>Última atualização</th>
+                <th>Data da Última atualização</th>
+                <th>Status da ultima movimentação</th>
                 <th>Data do Envio</th>
               </tr>
               </tr>
@@ -158,9 +158,9 @@
                 <th>Telefone</th>
                 <th>Curso</th>
                 <th>Assunto</th>
-                <th>Status do evento</th>
                 <th>Status do chamado</th>
-                <th>Última atualização</th>
+                <th>Data da Última atualização</th>
+                <th>Status da ultima movimentação</th>
                 <th>Data do Envio</th>
               </tr>
               </tr>
@@ -201,9 +201,9 @@
                 <th>Telefone</th>
                 <th>Curso</th>
                 <th>Assunto</th>
-                <th>Status do evento</th>
                 <th>Status do chamado</th>
-                <th>Última atualização</th>
+                <th>Data da Última atualização</th>
+                <th>Status da ultima movimentação</th>
                 <th>Data do Envio</th>
               </tr>
               </tr>

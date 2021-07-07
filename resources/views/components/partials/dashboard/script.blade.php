@@ -10,7 +10,7 @@
         $('#modalTicketsCreated').on('shown.bs.modal', function() {
             var table = $('#tableTicketsCreated').DataTable({
                 "lengthMenu": [ 5,10, 25, 50, 100 ],
-                responsive: true,
+                // responsive: true,
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -25,8 +25,8 @@
                     {data: 'curso', name: 'curso'},
                     {data: 'assunto', name: 'assunto'},
                     {data: 'status_evento', name: 'status_evento'},
-                    {data: 'status_chamado', name: 'status_chamado'},
                     {data: 'ultima_atualizacao', name: 'ultima_atualizacao'},
+                    {data: 'status_chamado', name: 'status_chamado'},
                     {data: 'envio', name: 'envio'},
                 //   {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
@@ -55,8 +55,8 @@
                     {data: 'curso', name: 'curso'},
                     {data: 'assunto', name: 'assunto'},
                     {data: 'status_evento', name: 'status_evento'},
-                    {data: 'status_chamado', name: 'status_chamado'},
                     {data: 'ultima_atualizacao', name: 'ultima_atualizacao'},
+                    {data: 'status_chamado', name: 'status_chamado'},
                     {data: 'envio', name: 'envio'},
                 ]
             });
@@ -84,8 +84,8 @@
                     {data: 'curso', name: 'curso'},
                     {data: 'assunto', name: 'assunto'},
                     {data: 'status_evento', name: 'status_evento'},
-                    {data: 'status_chamado', name: 'status_chamado'},
                     {data: 'ultima_atualizacao', name: 'ultima_atualizacao'},
+                    {data: 'status_chamado', name: 'status_chamado'},
                     {data: 'envio', name: 'envio'},
                 ]
             });
@@ -113,8 +113,8 @@
                     {data: 'curso', name: 'curso'},
                     {data: 'assunto', name: 'assunto'},
                     {data: 'status_evento', name: 'status_evento'},
-                    {data: 'status_chamado', name: 'status_chamado'},
                     {data: 'ultima_atualizacao', name: 'ultima_atualizacao'},
+                    {data: 'status_chamado', name: 'status_chamado'},
                     {data: 'envio', name: 'envio'},
                 ]
             });
@@ -142,8 +142,8 @@
                     {data: 'curso', name: 'curso'},
                     {data: 'assunto', name: 'assunto'},
                     {data: 'status_evento', name: 'status_evento'},
-                    {data: 'status_chamado', name: 'status_chamado'},
                     {data: 'ultima_atualizacao', name: 'ultima_atualizacao'},
+                    {data: 'status_chamado', name: 'status_chamado'},
                     {data: 'envio', name: 'envio'},
                 ]
             });
