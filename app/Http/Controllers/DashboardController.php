@@ -131,8 +131,7 @@ class DashboardController extends Controller
         LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
         LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
-        AND ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='reopened' GROUP BY ost_thread_event.thread_id)
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='reopened' GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id IN (1,6)
         ORDER BY ost_thread_event.thread_id ASC
         ";
@@ -172,8 +171,7 @@ class DashboardController extends Controller
         LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
         LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
-        AND ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='assigned' GROUP BY ost_thread_event.thread_id)
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='assigned' GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id IN (1,6)
         ORDER BY ost_thread_event.thread_id ASC
         ";
@@ -213,8 +211,7 @@ class DashboardController extends Controller
         LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
         LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
-        AND ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='transferred' GROUP BY ost_thread_event.thread_id)
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='transferred' GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id IN (1,6)
         ORDER BY ost_thread_event.thread_id ASC
         ";
@@ -252,12 +249,12 @@ class DashboardController extends Controller
         LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
         LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
         LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
-            LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
-        AND ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='overdue' GROUP BY ost_thread_event.thread_id)
+        LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='overdue' GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id IN (1,6)
         ORDER BY ost_thread_event.thread_id ASC
         ";
+        
         return DB::connection('mysql2')->select($sql);
     }
 
