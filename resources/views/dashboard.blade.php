@@ -27,9 +27,14 @@
     {{-- <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script> --}}
 
 
-    <x-partials.dashboard.cards :ticketsCreated="$ticketsCreated" :ticketsClosed="$ticketsClosed"
-        :ticketsReopened="$ticketsReopened" :ticketsTransferred="$ticketsTransferred"
-        :ticketsOverdue="$ticketsOverdue" />
+    <x-partials.dashboard.cards 
+    :ticketsCreated="$ticketsCreated" 
+    :ticketsClosed="$ticketsClosed"
+    :ticketsReopened="$ticketsReopened" 
+    :ticketsTransferred="$ticketsTransferred" 
+    :ticketsOpened="$ticketsOpened"
+    :ticketsOverdue="$ticketsOverdue" 
+        />
 
     <x-partials.dashboard.modals />
     <x-partials.dashboard.script />

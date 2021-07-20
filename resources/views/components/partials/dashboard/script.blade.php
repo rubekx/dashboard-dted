@@ -173,8 +173,40 @@
             table.destroy();
         });
 
+        $('#modalTicketsOpened').on('shown.bs.modal', function() {
+                var table = $('#tableTicketsOpened').DataTable({
+                "lengthMenu": [ 5,10, 25, 50, 100 ],
+            //  dom: 'Bfrtip',
+                buttons: [
+                    'csv', 'excel'
+                ],
+                responsive: true,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    "url": "{{ route('dashboard.tickets.table').'?type=6' }}",
+                },
+                columns: [
+                    {data: 'ticket_id', name: 'ticket_id'},
+                    {data: 'chamado', name: 'chamado'},
+                    {data: 'usuario', name: 'usuario'},
+                    {data: 'email', name: 'email'},
+                    {data: 'telefone', name: 'telefone'},
+                    {data: 'curso', name: 'curso'},
+                    {data: 'assunto', name: 'assunto'},
+                    {data: 'status_evento', name: 'status_evento'},
+                    {data: 'ultima_atualizacao', name: 'ultima_atualizacao'},
+                    {data: 'status_chamado', name: 'status_chamado'},
+                    {data: 'envio', name: 'envio'},
+                ]
+            });
+        });
+        $('#modalTicketsOpened').on('hide.bs.modal', function (e) {
+            var table = $('#tableTicketsOpened').DataTable()
+            table.destroy();
+        });
 
-  
+        
         
   
         // $('#createNewCustomer').click(function () {

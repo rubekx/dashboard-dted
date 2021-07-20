@@ -9,6 +9,7 @@ class Cards extends Component
     public $ticketsCreated;
     public $ticketsClosed;
     public $ticketsReopened;
+    public $ticketsOpened;
     public $ticketsTransferred;
     public $ticketsOverdue;
     /**
@@ -16,11 +17,12 @@ class Cards extends Component
      *
      * @return void
      */
-    public function __construct($ticketsCreated, $ticketsClosed, $ticketsReopened, $ticketsTransferred, $ticketsOverdue)
+    public function __construct($ticketsCreated, $ticketsClosed, $ticketsReopened, $ticketsOpened, $ticketsTransferred, $ticketsOverdue)
     {
         $this->ticketsCreated = $ticketsCreated;
         $this->ticketsClosed = $ticketsClosed;
         $this->ticketsReopened = $ticketsReopened;
+        $this->ticketsOpened = $ticketsOpened;
         $this->ticketsTransferred = $ticketsTransferred;
         $this->ticketsOverdue = $ticketsOverdue;
     }

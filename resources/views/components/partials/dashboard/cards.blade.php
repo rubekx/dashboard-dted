@@ -30,12 +30,30 @@
         </div>
         <!--/Metric Card-->
     </div>
-    <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"  data-toggle="modal" data-target="#modalTicketsReopened">
+
+    <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"  data-toggle="modal" data-target="#modalTicketsOpened">
         <!--Metric Card-->
-        <div class=" border rounded bg-gray-400 p-5">
+        <div class=" border rounded bg-green-600 p-5">
             <div class="flex flex-row items-center">
                 <div class="flex-shrink pr-4">
-                    <div class="rounded p-3 bg-gray-400"><i class="fas fa-user-plus fa-2x fa-fw fa-inverse"></i>
+                    <div class="rounded p-3 bg-green-600"><i class="fas fa-user-plus fa-2x fa-fw fa-inverse"></i>
+                    </div>
+                </div>
+                <div class="flex-1 text-right md:text-center">
+                    <h5 class="font-bold uppercase text-white">Abertos</h5>
+                    <h3 class="font-bold text-4xl text-white">{{$ticketsOpened}}</h3>
+                </div>
+            </div>
+        </div>
+        <!--/Metric Card-->
+    </div>
+
+    <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"  data-toggle="modal" data-target="#modalTicketsReopened">
+        <!--Metric Card-->
+        <div class=" border rounded bg-red-400  p-5">
+            <div class="flex flex-row items-center">
+                <div class="flex-shrink pr-4">
+                    <div class="rounded p-3 bg-red-400"><i class="fas fa-user-plus fa-2x fa-fw fa-inverse"></i>
                     </div>
                 </div>
                 <div class="flex-1 text-right md:text-center">
@@ -46,12 +64,13 @@
         </div>
         <!--/Metric Card-->
     </div>
+
     <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"  data-toggle="modal" data-target="#modalTicketsTransferred">
         <!--Metric Card-->
-        <div class="border rounded bg-ost-yelow p-5">
+        <div class="border rounded bg-ost-purple p-5">
             <div class="flex flex-row items-center">
                 <div class="flex-shrink pr-4">
-                    <div class="rounded p-3 bg-ost-yelow"><i class="fas fa-server fa-2x fa-fw fa-inverse"></i>
+                    <div class="rounded p-3 bg-ost-purple"><i class="fas fa-server fa-2x fa-fw fa-inverse"></i>
                     </div>
                 </div>
                 <div class="flex-1 text-right md:text-center">
@@ -64,10 +83,10 @@
     </div>
     <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"  data-toggle="modal" data-target="#modalTicketsOverdue">
         <!--Metric Card-->
-        <div class="border rounded bg-ost-purple p-5">
+        <div class="border rounded bg-red-600 p-5">
             <div class="flex flex-row items-center">
                 <div class="flex-shrink pr-4">
-                    <div class="rounded p-3 bg-ost-purple"><i class="fas fa-tasks fa-2x fa-fw fa-inverse"></i>
+                    <div class="rounded p-3 bg-red-600"><i class="fas fa-tasks fa-2x fa-fw fa-inverse"></i>
                     </div>
                 </div>
                 <div class="flex-1 text-right md:text-center">
