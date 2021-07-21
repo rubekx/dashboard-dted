@@ -344,7 +344,17 @@ class DashboardController extends Controller
         $result = DB::connection('mysql2')->select($sql);
         $response = '';
         foreach ($result as $res) {
-            $response = $response . '<b>Autor:</b> ' . $res->poster.' '.'<b>Data:</b> '.$res->created.'<br><b>Post:</b> ' . $res->body.'<hr>';
+            $response = $response . '<b>Solicitante:</b> ' . $res->poster.' '.'<b>Data:</b> '.$res->created.'<br><b>Post:</b> ' . $res->body.'<hr>';
+            /**
+             * Solicitante - Solicitante
+             * Staff - legenda (secretario / tecnico dted)
+             * Detalhe - De "fulano' atribuido para 'outro fulano"
+             * Adicionar caixa criada pelo sistema com status (Ex: Marcado em atraso) 
+             * Data no formato BR e remover segundo 
+             * listar o polo do solicitante
+             * diponibilizar anexos dos chamados
+             * 
+             */
         }
         return $response;
     }
