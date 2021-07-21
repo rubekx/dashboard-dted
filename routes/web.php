@@ -31,4 +31,6 @@ Route::get('/criados', [DashboardController::class, 'index'])->middleware(['auth
 
 Route::get('/dashboard/tickets/table', [DashboardController::class, 'ticketsTableAjax'])->middleware(['auth'])->name('dashboard.tickets.table');
 
+Route::get('/dashboard/thread/entry/{thread_id}', [DashboardController::class, 'threadEntryAjax'])->middleware(['auth'])->name('dashboard.thread.entry');
+
 require __DIR__.'/auth.php';

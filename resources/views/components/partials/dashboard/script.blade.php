@@ -21,18 +21,19 @@
                     "url": "{{ route('dashboard.tickets.table').'?type=1' }}",
                 },
                 columns: [
-                    {data: 'ticket_id', name: 'ticket_id'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    // {data: 'ticket_id', name: 'ticket_id'},
                     {data: 'chamado', name: 'chamado'},
                     {data: 'usuario', name: 'usuario'},
                     {data: 'email', name: 'email'},
-                    {data: 'telefone', name: 'telefone'},
-                    {data: 'curso', name: 'curso'},
+                    {data: 'telefone', name: 'telefone'},                  
+                    {data: 'departamento', name: 'departamento'},
+                    {data: 'staff', name: 'staff'},
                     {data: 'assunto', name: 'assunto'},
                     {data: 'status_evento', name: 'status_evento'},
                     {data: 'ultima_atualizacao', name: 'ultima_atualizacao'},
                     {data: 'status_chamado', name: 'status_chamado'},
                     {data: 'envio', name: 'envio'},
-                //   {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
         });
@@ -55,12 +56,15 @@
                     "url": "{{ route('dashboard.tickets.table').'?type=2' }}",
                 },
                 columns: [
-                    {data: 'ticket_id', name: 'ticket_id'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    // {data: 'ticket_id', name: 'ticket_id'},
                     {data: 'chamado', name: 'chamado'},
                     {data: 'usuario', name: 'usuario'},
                     {data: 'email', name: 'email'},
                     {data: 'telefone', name: 'telefone'},
-                    {data: 'curso', name: 'curso'},
+                    {data: 'staff', name: 'staff'},
+                    {data: 'assunto', name: 'assunto'},
+                    // {data: 'curso', name: 'curso'},
                     {data: 'assunto', name: 'assunto'},
                     {data: 'status_evento', name: 'status_evento'},
                     {data: 'ultima_atualizacao', name: 'ultima_atualizacao'},
@@ -88,12 +92,15 @@
                     "url": "{{ route('dashboard.tickets.table').'?type=3' }}",
                 },
                 columns: [
-                    {data: 'ticket_id', name: 'ticket_id'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    // {data: 'ticket_id', name: 'ticket_id'},
                     {data: 'chamado', name: 'chamado'},
                     {data: 'usuario', name: 'usuario'},
                     {data: 'email', name: 'email'},
                     {data: 'telefone', name: 'telefone'},
-                    {data: 'curso', name: 'curso'},
+                    {data: 'staff', name: 'staff'},
+                    {data: 'assunto', name: 'assunto'},
+                    // {data: 'curso', name: 'curso'},
                     {data: 'assunto', name: 'assunto'},
                     {data: 'status_evento', name: 'status_evento'},
                     {data: 'ultima_atualizacao', name: 'ultima_atualizacao'},
@@ -121,12 +128,15 @@
                     "url": "{{ route('dashboard.tickets.table').'?type=4' }}",
                 },
                 columns: [
-                    {data: 'ticket_id', name: 'ticket_id'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    // {data: 'ticket_id', name: 'ticket_id'},
                     {data: 'chamado', name: 'chamado'},
                     {data: 'usuario', name: 'usuario'},
                     {data: 'email', name: 'email'},
-                    {data: 'telefone', name: 'telefone'},
-                    {data: 'curso', name: 'curso'},
+                    {data: 'telefone', name: 'telefone'},                  
+                    {data: 'departamento', name: 'departamento'},
+                    {data: 'staff', name: 'staff'},
+                    // {data: 'curso', name: 'curso'},
                     {data: 'assunto', name: 'assunto'},
                     {data: 'status_evento', name: 'status_evento'},
                     {data: 'ultima_atualizacao', name: 'ultima_atualizacao'},
@@ -141,6 +151,7 @@
         });
 
         $('#modalTicketsOverdue').on('shown.bs.modal', function() {
+
             var table = $('#tableTicketsOverdue').DataTable({
                 "lengthMenu": [ 5,10, 25, 50, 100 ],
                //  dom: 'Bfrtip',
@@ -153,21 +164,24 @@
                 ajax: {
                     "url": "{{ route('dashboard.tickets.table').'?type=5' }}",
                 },
-                columns: [
-                    {data: 'ticket_id', name: 'ticket_id'},
+                columns: [                    
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    // {data: 'ticket_id', name: 'ticket_id'},
                     {data: 'chamado', name: 'chamado'},
                     {data: 'usuario', name: 'usuario'},
                     {data: 'email', name: 'email'},
                     {data: 'telefone', name: 'telefone'},
-                    {data: 'curso', name: 'curso'},
+                    {data: 'departamento', name: 'departamento'},
+                    {data: 'staff', name: 'staff'},
                     {data: 'assunto', name: 'assunto'},
                     {data: 'status_evento', name: 'status_evento'},
                     {data: 'ultima_atualizacao', name: 'ultima_atualizacao'},
                     {data: 'status_chamado', name: 'status_chamado'},
-                    {data: 'envio', name: 'envio'},
+                    {data: 'envio', name: 'envio'},            
                 ]
             });
         });
+
         $('#modalTicketsOverdue').on('hide.bs.modal', function (e) {
             var table = $('#tableTicketsOverdue').DataTable()
             table.destroy();
@@ -187,12 +201,14 @@
                     "url": "{{ route('dashboard.tickets.table').'?type=6' }}",
                 },
                 columns: [
-                    {data: 'ticket_id', name: 'ticket_id'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    // {data: 'ticket_id', name: 'ticket_id'},
                     {data: 'chamado', name: 'chamado'},
                     {data: 'usuario', name: 'usuario'},
                     {data: 'email', name: 'email'},
                     {data: 'telefone', name: 'telefone'},
-                    {data: 'curso', name: 'curso'},
+                    {data: 'departamento', name: 'departamento'},
+                    {data: 'staff', name: 'staff'},
                     {data: 'assunto', name: 'assunto'},
                     {data: 'status_evento', name: 'status_evento'},
                     {data: 'ultima_atualizacao', name: 'ultima_atualizacao'},
@@ -206,50 +222,15 @@
             table.destroy();
         });
 
+        $('body').on('click', '.showMessages', function () {
+            var thread_id = $(this).data('id');
+            let url = "{{ route('dashboard.thread.entry', ':thread_id') }}";
+            url = url.replace(':thread_id', thread_id);
+            $.get(url, function(data, status){
+                $('#contentThreadEntry').html(data);
+            });
+            $("#modalThreadEntry").modal("show");
+        });
         
-        
-  
-        // $('#createNewCustomer').click(function () {
-        //     $('#saveBtn').val("create-Customer");
-        //     $('#Customer_id').val('');
-        //     $('#CustomerForm').trigger("reset");
-        //     $('#modelHeading').html("Create New Customer");
-        //     $('#ajaxModel').modal('show');
-        // });
-
-        // $('body').on('click', '.editCustomer', function () {
-        //     var Customer_id = $(this).data('id');
-        //     $.get("" +'/' + Customer_id +'/edit', function (data) {
-        //         $('#modelHeading').html("Edit Customer");
-        //         $('#saveBtn').val("edit-user");
-        //         $('#ajaxModel').modal('show');
-        //         $('#Customer_id').val(data.id);
-        //         $('#name').val(data.name);
-        //         $('#detail').val(data.detail);
-        //     })
-        // });
-
-        // $('#saveBtn').click(function (e) {
-        //   e.preventDefault();
-        //   $(this).html('Sending..');
-  
-        //   $.ajax({
-        //     data: $('#CustomerForm').serialize(),
-        //     url: "",
-        //     type: "POST",
-        //     dataType: 'json',
-        //         success: function (data) {
-    
-        //             $('#CustomerForm').trigger("reset");
-        //             $('#ajaxModel').modal('hide');
-        //             table.draw();
-    
-        //         },
-        //         error: function (data) {
-        //             console.log('Error:', data);
-        //             $('#saveBtn').html('Save Changes');
-        //         }
-        //     });
-        // });  
     });
 </script>

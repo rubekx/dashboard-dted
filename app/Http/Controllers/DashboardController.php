@@ -28,6 +28,9 @@ class DashboardController extends Controller
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
+        ost_department.name as departamento,
+        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
+        ost_thread_event.thread_id,
         CASE
             WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
             WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
@@ -43,15 +46,16 @@ class DashboardController extends Controller
 
         $sql = "SELECT " . $select . "
             FROM ost_thread_event
-            left JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+            LEFT JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
             JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-            left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-            left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+            LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+            LEFT JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
             LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
             LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
             LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
             LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
-
+            LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
+            LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
             WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
 
             ORDER BY ost_thread_event.thread_id ASC
@@ -69,6 +73,9 @@ class DashboardController extends Controller
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
+        ost_department.name as departamento,
+        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
+        ost_thread_event.thread_id,
         CASE
             WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
             WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
@@ -84,14 +91,16 @@ class DashboardController extends Controller
 
         $sql = "SELECT " . $select . "
         FROM ost_thread_event
-        left JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+        LEFT JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
         JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-        left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-        left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+        LEFT JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
         LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
         LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
         LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
-            LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
+        LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
+        LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
+        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
         WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id = 3
         ORDER BY ost_thread_event.thread_id ASC
@@ -108,6 +117,9 @@ class DashboardController extends Controller
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
+        ost_department.name as departamento,
+        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
+        ost_thread_event.thread_id,
         CASE
             WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
             WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
@@ -123,14 +135,16 @@ class DashboardController extends Controller
 
         $sql = "SELECT " . $select . "
         FROM ost_thread_event
-        left JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+        LEFT JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
         JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-        left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-        left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+        LEFT JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
         LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
         LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
         LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
+        LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
+        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
         WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='reopened' GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id IN (1,6)
         ORDER BY ost_thread_event.thread_id ASC
@@ -147,6 +161,9 @@ class DashboardController extends Controller
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
+        ost_department.name as departamento,
+        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
+        ost_thread_event.thread_id,
         CASE
             WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
             WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
@@ -163,14 +180,16 @@ class DashboardController extends Controller
         $sql = "SELECT " . $select . "
 
         FROM ost_thread_event
-        left JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+        LEFT JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
         JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-        left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-        left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+        LEFT JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
         LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
         LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
         LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
+        LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
+        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
         WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='assigned' GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id IN (1,6)
         ORDER BY ost_thread_event.thread_id ASC
@@ -186,7 +205,10 @@ class DashboardController extends Controller
         ost_user_email.address AS email,
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
-        ost_ticket__cdata.subject AS assunto,
+        ost_ticket__cdata.subject AS assunto,        
+        ost_department.name as departamento,
+        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
+        ost_thread_event.thread_id,
         CASE
             WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
             WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
@@ -203,14 +225,16 @@ class DashboardController extends Controller
         $sql = "SELECT " . $select . "
 
         FROM ost_thread_event
-        left JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+        LEFT JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
         JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-        left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-        left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+        LEFT JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
         LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
         LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
         LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
+        LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
+        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
         WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='transferred' GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id IN (1,6)
         ORDER BY ost_thread_event.thread_id ASC
@@ -225,8 +249,13 @@ class DashboardController extends Controller
         ost_user.name AS usuario,
         ost_user_email.address AS email,
         ost_user__cdata.phone AS telefone,
-        ost_help_topic.topic AS curso,
+        /*ost_help_topic.topic AS curso,*/
         ost_ticket__cdata.subject AS assunto,
+        ost_thread_event.staff_id,
+        ost_thread_event.dept_id,
+        ost_department.name as departamento,
+        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
+        ost_thread_event.thread_id,
         CASE
             WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
             WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
@@ -242,16 +271,22 @@ class DashboardController extends Controller
 
         $sql = "SELECT " . $select . "
         FROM ost_thread_event
-        left JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+        JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
         JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-        left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-        left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+        LEFT JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
         LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
         LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
         LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='overdue' GROUP BY ost_thread_event.thread_id)
-        AND ost_ticket.status_id IN (1,6)
+        LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
+        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
+        WHERE
+        ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='overdue' GROUP BY ost_thread_event.thread_id)
+        AND
+        ost_thread_event.thread_id not IN (SELECT thread_id from ost_thread_event where ost_thread_event.state ='closed'GROUP BY thread_id ORDER BY id DESC)
+        AND
+        ost_ticket.status_id IN (1,6)
         ORDER BY ost_thread_event.thread_id ASC
         ";
 
@@ -267,6 +302,9 @@ class DashboardController extends Controller
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
+        ost_department.name as departamento,
+        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
+        ost_thread_event.thread_id,
         CASE
             WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
             WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
@@ -282,20 +320,33 @@ class DashboardController extends Controller
 
         $sql = "SELECT " . $select . "
         FROM ost_thread_event
-        left JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+        LEFT JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
         JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-        left JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-        left JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+        LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+        LEFT JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
         LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
         LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
         LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
+        LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
+        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
         WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
         AND ost_ticket.status_id IN (1,6)
         ORDER BY ost_thread_event.thread_id ASC
         ";
 
         return DB::connection('mysql2')->select($sql);
+    }
+
+    public static function threadEntryAjax($thread_id)
+    {
+        $sql = "SELECT id, poster, body, created FROM ost_thread_entry WHERE thread_id = '" . $thread_id . "' ORDER BY thread_id ASC";
+        $result = DB::connection('mysql2')->select($sql);
+        $response = '';
+        foreach ($result as $res) {
+            $response = $response . '<b>Autor:</b> ' . $res->poster.' '.'<b>Data:</b> '.$res->created.'<br><b>Post:</b> ' . $res->body.'<hr>';
+        }
+        return $response;
     }
 
     public static function ticketsTableAjax(Request $request)
@@ -311,17 +362,17 @@ class DashboardController extends Controller
                 $data = DashboardController::ticketsTransferred();
             } elseif ($request->type == 5) {
                 $data = DashboardController::ticketsOverdue();
-            }else {
+            } else {
                 $data = DashboardController::ticketsOpened();
             }
             return Datatables::of($data)
-            // ->addIndexColumn()
-            // ->addColumn('action', function ($row) {
-            //     $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->ticket_id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editCustomer">Edit</a>';
-            //     $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->ticket_id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteCustomer">Delete</a>';
-            //     return $btn;
-            // })
-            // ->rawColumns(['action'])
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->thread_id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm showMessages">Detalhes</a>';
+                    // $btn = '<button type="button" data-id="' . $row->thread_id . '" class="btn btn-primary" data-toggle="modal" showMessages data-target="#modalThreadEntry">Open modal</button>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
                 ->make(true);
         }
     }
@@ -362,3 +413,81 @@ class DashboardController extends Controller
     }
 
 }
+
+// SELECT ost_ticket.number AS chamado,
+// ost_ticket.ticket_id,
+// ost_user.name AS solicitante,
+// ost_user_email.address AS solicitante_email,
+// ost_user__cdata.phone AS telefone,
+// ost_help_topic.topic AS curso,
+// ost_ticket__cdata.subject AS assunto,
+// ost_thread_event.staff_id,
+// ost_thread_event.dept_id,
+// CASE
+//     WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
+//     WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
+//     WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
+//     WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado'
+//     WHEN ost_thread_event.state = 'resent' THEN 'Reenviado'
+//     WHEN ost_thread_event.state = 'edited' THEN 'Editado'
+//     ELSE ost_thread_event.state
+// END as status_evento,
+// ost_ticket_status.name AS status_chamado,
+// DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
+// DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio
+// FROM ost_thread_event
+//  JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+// JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
+//  JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+//  JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+//  JOIN ost_user ON ost_user.id=ost_ticket.user_id
+//  JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
+//  JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
+//  JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
+
+// WHERE
+// ost_thread_event.id IN
+// (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='overdue' GROUP BY ost_thread_event.thread_id)
+// AND
+// ost_ticket.status_id IN (1,6)
+//  and ost_thread_event.thread_id not IN (SELECT thread_id from ost_thread_event where ost_thread_event.state ='closed'GROUP BY thread_id ORDER BY id DESC)
+// ORDER BY ost_thread_event.thread_id desc
+
+// SELECT ost_ticket.number AS chamado,
+// ost_ticket.ticket_id,
+// ost_user.name AS solicitante,
+// ost_user_email.address AS solicitante_email,
+// ost_user__cdata.phone AS telefone,
+// ost_help_topic.topic AS curso,
+// ost_ticket__cdata.subject AS assunto,
+// ost_thread_event.staff_id,
+// ost_thread_event.dept_id,
+// CASE
+//     WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
+//     WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
+//     WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
+//     WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado'
+//     WHEN ost_thread_event.state = 'resent' THEN 'Reenviado'
+//     WHEN ost_thread_event.state = 'edited' THEN 'Editado'
+//     ELSE ost_thread_event.state
+// END as status_evento,
+// ost_ticket_status.name AS status_chamado,
+// ost_ticket.lastupdate AS ultima_atualizacao,
+// ost_ticket.created AS envio
+// FROM ost_thread_event
+//  JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
+// JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
+//  JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
+//  JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
+//  JOIN ost_user ON ost_user.id=ost_ticket.user_id
+//  JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
+//  JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
+//  JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
+
+// WHERE
+// ost_thread_event.id IN
+// (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='overdue' GROUP BY ost_thread_event.thread_id)
+// AND
+// ost_ticket.status_id IN (1,6)
+//  and ost_thread_event.thread_id not IN (SELECT thread_id from ost_thread_event where ost_thread_event.state ='closed'GROUP BY thread_id ORDER BY id DESC)
+// ORDER BY ost_thread_event.thread_id desc
