@@ -205,7 +205,7 @@ class DashboardController extends Controller
         ost_user_email.address AS email,
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
-        ost_ticket__cdata.subject AS assunto,        
+        ost_ticket__cdata.subject AS assunto,
         ost_department.name as departamento,
         CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
         ost_thread_event.thread_id,
@@ -338,25 +338,93 @@ class DashboardController extends Controller
         return DB::connection('mysql2')->select($sql);
     }
 
-    public static function threadEntryAjax($thread_id)
+    public function threadEntryAjax($thread_id)
     {
-        $sql = "SELECT id, poster, body, created FROM ost_thread_entry WHERE thread_id = '" . $thread_id . "' ORDER BY thread_id ASC";
+        $sql = "SELECT poster, body, CASE WHEN staff_id != 0 THEN 'Staff' ELSE 'Solicitante' END AS ator, created AS data_post FROM ost_thread_entry WHERE thread_id = '" . $thread_id . "' ORDER BY thread_id ASC";
         $result = DB::connection('mysql2')->select($sql);
-        $response = '';
+
+        $thread_data = [];
         foreach ($result as $res) {
-            $response = $response . '<b>Solicitante:</b> ' . $res->poster.' '.'<b>Data:</b> '.$res->created.'<br><b>Post:</b> ' . $res->body.'<hr>';
+            $thread_data[] = [
+                'data_envio' => $res->data_post,
+                'autor' => $res->poster,
+                'tipo_autor' => $res->ator,
+                'message' => $res->body,
+                'tipo' => 1,
+                'status' => null,
+                'transferido' => null,
+            ];
+        }
+
+        $sql = "SELECT ost_thread_event.staff_id, ost_thread_event.team_id, ost_thread_event.dept_id,
+        CASE
+        WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
+        WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
+        WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
+        WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado'
+        WHEN ost_thread_event.state = 'resent' THEN 'Reenviado'
+        WHEN ost_thread_event.state = 'edited' THEN 'Editado'
+        ELSE ost_thread_event.state
+        END as status_evento,
+        CASE
+        WHEN ost_thread_event.uid_type = 'S' THEN 'Staff'
+        WHEN ost_thread_event.uid_type = 'U' THEN 'Solicitante'
+        ELSE ost_thread_event.uid_type
+        END as tipo_autor, ost_thread_event.uid, ost_thread_event.timestamp AS  data_post, ost_thread_event.username FROM ost_thread_event WHERE ost_thread_event.thread_id = '" . $thread_id . "' ORDER BY ost_thread_event.thread_id ASC";
+        $result = DB::connection('mysql2')->select($sql);
+
+        foreach ($result as $res) {
+            $thread_data[] = [
+                'data_envio' => $res->data_post,
+                'autor' => $res->uid . ' ' . $res->username,
+                'status' => $res->status_evento,
+                'tipo_autor' => $res->tipo_autor,
+                'message' => $res->status_evento,
+                'transferido_staf' => $res->staff_id != 0 ? '' : null,
+                'transferido_depa' => $res->dept_id != 0 ? '' : null,
+                'transferido_team' => $res->team_id != 0 ? '' : null,
+                'tipo' => 2,
+            ];
+        }
+
+        usort($thread_data, [$this, 'date_compare']);
+        // $thread_data = json_encode($thread_data);
+        // return $thread_data;
+
+        $msg_staff = '<div class="card bg-primary"><div class="card-header">Featured</div><div class="card-body" style="background-color:#00AA9E;"><p class="card-text"></p></div></div>';
+
+        $response = '';
+        foreach ($thread_data as $res) {
+            // $response = $response . '<b>' . $res['tipo_autor'] . ':</b> ' . $res['autor'] . ' ' . '<b>Data:</b> ' . $res['data_envio'] . '<br><b>Post:</b> ' . $res['message'] . '<hr>';
+            $color = $res['tipo_autor'] == "Staff" ? 'secondary' : 'primary';
+            $tipo = $res['tipo'] == 1 ? 'postou' : $res['status'];
+            $response = $response . '<div class="card" style="margin-bottom:10px;">
+                                        <div class="card-header bg-' . $color . ' text-white">' . $res['tipo_autor'] .' '.$res['autor'].' '.$tipo .' '.$res['data_envio'] .' </div>
+                                            <div class="card-body">
+                                                <p class="card-text">' . $res['message'] . '</p>
+                                            </div>
+                                        </div>
+                                    </div>';
             /**
              * Solicitante - Solicitante
              * Staff - legenda (secretario / tecnico dted)
              * Detalhe - De "fulano' atribuido para 'outro fulano"
-             * Adicionar caixa criada pelo sistema com status (Ex: Marcado em atraso) 
-             * Data no formato BR e remover segundo 
+             * Adicionar caixa criada pelo sistema com status (Ex: Marcado em atraso)
+             * Data no formato BR e remover segundo
              * listar o polo do solicitante
              * diponibilizar anexos dos chamados
-             * 
+             *
              */
         }
+
         return $response;
+    }
+
+    public function date_compare($element1, $element2)
+    {
+        $datetime1 = strtotime($element1['data_envio']);
+        $datetime2 = strtotime($element2['data_envio']);
+        return $datetime1 - $datetime2;
     }
 
     public static function ticketsTableAjax(Request $request)
@@ -378,7 +446,7 @@ class DashboardController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->thread_id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm showMessages">Detalhes</a>';
+                    $btn = '<a data-toggle="tooltip" data-id="' . $row->thread_id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm showMessages">Detalhes</a>';
                     // $btn = '<button type="button" data-id="' . $row->thread_id . '" class="btn btn-primary" data-toggle="modal" showMessages data-target="#modalThreadEntry">Open modal</button>';
                     return $btn;
                 })
