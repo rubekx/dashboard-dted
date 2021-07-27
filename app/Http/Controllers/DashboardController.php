@@ -356,28 +356,51 @@ class DashboardController extends Controller
             ];
         }
 
-        $sql = "SELECT ost_thread_event.staff_id, ost_thread_event.team_id, ost_thread_event.dept_id,
+        $sql = "SELECT
+        ost_thread_event.staff_id,
+        ost_thread_event.team_id,
+        ost_thread_event.dept_id,
         CASE
-        WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
-        WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
-        WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
-        WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado'
-        WHEN ost_thread_event.state = 'resent' THEN 'Reenviado'
-        WHEN ost_thread_event.state = 'edited' THEN 'Editado'
-        WHEN ost_thread_event.state = 'assigned' THEN 'Atribuído'
-        ELSE ost_thread_event.state
+            WHEN ost_thread_event.uid IS NULL AND ost_thread_event.state ='reopened' THEN ost_thread_event.username
+            WHEN ost_thread_event.username='SYSTEM' THEN 'Sistema'
+            WHEN ost_thread_event.uid_type='S' THEN CONCAT(ost_staff.firstname,' ',ost_staff.lastname)
+            WHEN ost_thread_event.uid_type='U' THEN ost_user.name        
+        END as autor,
+        CASE
+            WHEN ost_thread_event.state = 'closed' THEN 'fechou'
+            WHEN ost_thread_event.state = 'transferred' THEN CONCAT('transferiu para',' <b>', ost_department.name,'</b>')
+            WHEN ost_thread_event.state = 'reopened' THEN 'reabriu '
+            WHEN ost_thread_event.state = 'overdue' THEN 'sinalizou como atrasado'
+            WHEN ost_thread_event.state = 'resent' THEN 'reenviou'
+            WHEN ost_thread_event.state = 'edited' THEN 'editou'
+            WHEN ost_thread_event.state = 'assigned' AND ost_thread_event.data LIKE '%team%' THEN 'atribuiu isto ao '
+            WHEN ost_thread_event.state = 'assigned' AND ost_thread_event.data NOT LIKE '%team%' THEN CONCAT('atribuiu isto a',' <b>',staff.firstname,' ',staff.lastname,'</b>')
+            WHEN ost_thread_event.state = 'created' THEN 'criou'
+            ELSE ost_thread_event.state
         END as status_evento,
         CASE
-        WHEN ost_thread_event.uid_type = 'S' THEN 'Staff'
-        WHEN ost_thread_event.uid_type = 'U' THEN 'Solicitante'
-        ELSE ost_thread_event.uid_type
-        END as tipo_autor, ost_thread_event.uid, ost_thread_event.timestamp AS  data_post, ost_thread_event.username FROM ost_thread_event WHERE ost_thread_event.thread_id = '" . $thread_id . "' ORDER BY ost_thread_event.thread_id ASC";
+            WHEN ost_thread_event.uid IS NULL AND ost_thread_event.state ='reopened' THEN 'Solicitante'
+            WHEN ost_thread_event.uid_type = 'S' THEN 'Staff'
+            WHEN ost_thread_event.uid_type = 'U' THEN 'Solicitante'
+        END as tipo_autor,
+        ost_thread_event.uid,
+        ost_thread_event.timestamp AS data_post,
+        ost_thread_event.username
+        FROM ost_thread_event
+        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id AND ost_thread_event.dept_id != 0
+        LEFT JOIN ost_staff ON ost_staff.staff_id = ost_thread_event.uid AND ost_thread_event.uid_type='S'
+        LEFT JOIN ost_staff AS staff ON staff.staff_id = ost_thread_event.staff_id AND ost_thread_event.staff_id != 0 AND ost_thread_event.state = 'assigned'
+        LEFT JOIN ost_user ON ost_user.id = ost_thread_event.uid AND (ost_thread_event.uid_type='U' OR (ost_thread_event.state ='reopened' AND ost_thread_event.uid IS NULL))
+        WHERE ost_thread_event.thread_id = '" . $thread_id . "'
+        ORDER BY ost_thread_event.thread_id ASC";
+
         $result = DB::connection('mysql2')->select($sql);
 
         foreach ($result as $res) {
             $thread_data[] = [
                 'data_envio' => $res->data_post,
-                'autor' => $res->uid . ' ' . $res->username,
+                // 'autor' => $res->uid . ' ' . $res->username,
+                'autor' => $res->autor,
                 'status' => $res->status_evento,
                 'tipo_autor' => $res->tipo_autor,
                 'message' => $res->status_evento,
@@ -392,20 +415,23 @@ class DashboardController extends Controller
         // $thread_data = json_encode($thread_data);
         // return $thread_data;
 
-        $msg_staff = '<div class="card bg-primary"><div class="card-header">Featured</div><div class="card-body" style="background-color:#00AA9E;"><p class="card-text"></p></div></div>';
-
         $response = '';
         foreach ($thread_data as $res) {
-            // $response = $response . '<b>' . $res['tipo_autor'] . ':</b> ' . $res['autor'] . ' ' . '<b>Data:</b> ' . $res['data_envio'] . '<br><b>Post:</b> ' . $res['message'] . '<hr>';
+
             $color = $res['tipo_autor'] == "Staff" ? 'secondary' : 'primary';
             $tipo = $res['tipo'] == 1 ? 'postou' : $res['status'];
-            $response = $response . '<div class="card" style="margin-bottom:10px;">
-                                        <div class="card-header bg-' . $color . ' text-white">' . $res['tipo_autor'] .' '.$res['autor'].' '.$tipo .' '.$res['data_envio'] .' </div>
+            $data_br = date('d/m/Y H:i:s', strtotime($res['data_envio']));
+            if ($res['tipo'] == 1) {
+                $response = $response . '<div class="card" style="margin-bottom:10px;">
+                                        <div class="card-header bg-' . $color . ' text-white">' . $res['tipo_autor'] . ': <b>' . $res['autor'] . '</b> ' . $tipo . ' ' . $data_br . ' </div>
                                             <div class="card-body">
                                                 <p class="card-text">' . $res['message'] . '</p>
                                             </div>
                                         </div>
                                     </div>';
+            } else {
+                $response = $response . '<div class="card" style="margin-bottom:10px;"><div class="card-header bg-' . $color . ' text-white">' . $res['tipo_autor'] . ': <b>' . $res['autor'] . '</b> ' . $res['message'] . ' ' . $data_br . '</div></div>';
+            }
             /**
              * Solicitante - Solicitante
              * Staff - legenda (secretario / tecnico dted)
