@@ -364,6 +364,7 @@ class DashboardController extends Controller
         WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado'
         WHEN ost_thread_event.state = 'resent' THEN 'Reenviado'
         WHEN ost_thread_event.state = 'edited' THEN 'Editado'
+        WHEN ost_thread_event.state = 'assigned' THEN 'Atribuído'
         ELSE ost_thread_event.state
         END as status_evento,
         CASE
