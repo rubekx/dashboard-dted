@@ -18,13 +18,13 @@ class DashboardController extends Controller
         return DashboardController::ticketsCreated();
     }
 
-    public static function json1(){
-        return DashboardController::ticketsCreated();
-    }
+    // public static function json1(){
+    //     return DashboardController::ticketsCreated();
+    // }
 
-    public static function json2(){
-        return DashboardController::ticketsCreated(1);
-    }
+    // public static function json2(){
+    //     return DashboardController::ticketsCreated(1);
+    // }
 
     public static function ticketsCreated($count = null)
     {
