@@ -34,4 +34,6 @@ Route::get('/dashboard/tickets/table', [DashboardController::class, 'ticketsTabl
 Route::get('/dashboard/thread/entry/{thread_id}', [DashboardController::class, 'threadEntryAjax'])->name('dashboard.thread.entry');
 // Route::get('/dashboard/thread/entry/{thread_id}', [DashboardController::class, 'threadEntryAjax'])->middleware(['auth'])->name('dashboard.thread.entry');
 
+Route::get('/total', [DashboardController::class, 'json2'])->name('dashboard.thread.total');
+Route::get('/tabela', [DashboardController::class, 'json1'])->name('dashboard.thread.tabela');
 require __DIR__.'/auth.php';

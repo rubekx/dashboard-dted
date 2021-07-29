@@ -18,6 +18,14 @@ class DashboardController extends Controller
         return DashboardController::ticketsCreated();
     }
 
+    public static function json1(){
+        return DashboardController::ticketsCreated();
+    }
+
+    public static function json2(){
+        return DashboardController::ticketsCreated(1);
+    }
+
     public static function ticketsCreated($count = null)
     {
         $select = $count == null ? "ost_ticket.ticket_id,
@@ -42,7 +50,7 @@ class DashboardController extends Controller
         END as status_evento,
         ost_ticket_status.name AS status_chamado,
         DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
-        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "count(ost_ticket.ticket_id) as total";
+        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "COUNT(ost_ticket.ticket_id) AS total";
 
         $sql = "SELECT " . $select . "
             FROM ost_thread_event
@@ -56,10 +64,10 @@ class DashboardController extends Controller
             LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
             LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
             LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
+
             WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
 
-            ORDER BY ost_thread_event.thread_id ASC
-            ";
+            ORDER BY ost_thread_event.thread_id ASC";
         return DB::connection('mysql2')->select($sql);
 
     }
@@ -340,7 +348,18 @@ class DashboardController extends Controller
 
     public function threadEntryAjax($thread_id)
     {
-        $sql = "SELECT poster, body, CASE WHEN staff_id != 0 THEN 'Staff' ELSE 'Solicitante' END AS ator, created AS data_post FROM ost_thread_entry WHERE thread_id = '" . $thread_id . "' ORDER BY thread_id ASC";
+        $sql = "SELECT
+        poster,
+        body,
+        title,
+        CASE
+            WHEN staff_id != 0 THEN 'Staff'
+            ELSE 'Solicitante'
+        END AS ator,
+        created AS data_post
+        FROM ost_thread_entry
+        WHERE thread_id = '" . $thread_id . "' ORDER BY thread_id ASC";
+
         $result = DB::connection('mysql2')->select($sql);
 
         $thread_data = [];
@@ -351,8 +370,9 @@ class DashboardController extends Controller
                 'tipo_autor' => $res->ator,
                 'message' => $res->body,
                 'tipo' => 1,
-                'status' => null,
-                'transferido' => null,
+                // 'status' => null,
+                // 'transferido' => null,
+                'title' => $res->title,
             ];
         }
 
@@ -364,7 +384,7 @@ class DashboardController extends Controller
             WHEN ost_thread_event.uid IS NULL AND ost_thread_event.state ='reopened' THEN ost_thread_event.username
             WHEN ost_thread_event.username='SYSTEM' THEN 'Sistema'
             WHEN ost_thread_event.uid_type='S' THEN CONCAT(ost_staff.firstname,' ',ost_staff.lastname)
-            WHEN ost_thread_event.uid_type='U' THEN ost_user.name        
+            WHEN ost_thread_event.uid_type='U' THEN ost_user.name
         END as autor,
         CASE
             WHEN ost_thread_event.state = 'closed' THEN 'fechou'
@@ -373,7 +393,7 @@ class DashboardController extends Controller
             WHEN ost_thread_event.state = 'overdue' THEN 'sinalizou como atrasado'
             WHEN ost_thread_event.state = 'resent' THEN 'reenviou'
             WHEN ost_thread_event.state = 'edited' THEN 'editou'
-            WHEN ost_thread_event.state = 'assigned' AND ost_thread_event.data LIKE '%team%' THEN 'atribuiu isto ao '
+            WHEN ost_thread_event.state = 'assigned' AND ost_thread_event.data LIKE '%team%' THEN CONCAT('atribuiu isto a',' <b>',ost_team.name,'</b>')
             WHEN ost_thread_event.state = 'assigned' AND ost_thread_event.data NOT LIKE '%team%' THEN CONCAT('atribuiu isto a',' <b>',staff.firstname,' ',staff.lastname,'</b>')
             WHEN ost_thread_event.state = 'created' THEN 'criou'
             ELSE ost_thread_event.state
@@ -388,6 +408,7 @@ class DashboardController extends Controller
         ost_thread_event.username
         FROM ost_thread_event
         LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id AND ost_thread_event.dept_id != 0
+        LEFT JOIN ost_team ON ost_team.team_id=ost_thread_event.team_id AND ost_thread_event.team_id != 0
         LEFT JOIN ost_staff ON ost_staff.staff_id = ost_thread_event.uid AND ost_thread_event.uid_type='S'
         LEFT JOIN ost_staff AS staff ON staff.staff_id = ost_thread_event.staff_id AND ost_thread_event.staff_id != 0 AND ost_thread_event.state = 'assigned'
         LEFT JOIN ost_user ON ost_user.id = ost_thread_event.uid AND (ost_thread_event.uid_type='U' OR (ost_thread_event.state ='reopened' AND ost_thread_event.uid IS NULL))
@@ -399,14 +420,10 @@ class DashboardController extends Controller
         foreach ($result as $res) {
             $thread_data[] = [
                 'data_envio' => $res->data_post,
-                // 'autor' => $res->uid . ' ' . $res->username,
                 'autor' => $res->autor,
                 'status' => $res->status_evento,
                 'tipo_autor' => $res->tipo_autor,
                 'message' => $res->status_evento,
-                'transferido_staf' => $res->staff_id != 0 ? '' : null,
-                'transferido_depa' => $res->dept_id != 0 ? '' : null,
-                'transferido_team' => $res->team_id != 0 ? '' : null,
                 'tipo' => 2,
             ];
         }
@@ -421,16 +438,20 @@ class DashboardController extends Controller
             $color = $res['tipo_autor'] == "Staff" ? 'secondary' : 'primary';
             $tipo = $res['tipo'] == 1 ? 'postou' : $res['status'];
             $data_br = date('d/m/Y H:i:s', strtotime($res['data_envio']));
-            if ($res['tipo'] == 1) {
+           
+            if ($res['tipo'] == 1) { 
+                $title = $res['title'] != null ? $res['title'] : '';
                 $response = $response . '<div class="card" style="margin-bottom:10px;">
-                                        <div class="card-header bg-' . $color . ' text-white">' . $res['tipo_autor'] . ': <b>' . $res['autor'] . '</b> ' . $tipo . ' ' . $data_br . ' </div>
-                                            <div class="card-body">
-                                                <p class="card-text">' . $res['message'] . '</p>
+                                            <div class="card-header bg-' . $color . ' text-white">' . $res['tipo_autor'] . ': <b>' . $res['autor'] . '</b> ' . $tipo . ' ' . $data_br . '  '.$title.'</div>
+                                                <div class="card-body">
+                                                    <p class="card-text">' . $res['message'] . '</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>';
+                                        </div>';
             } else {
-                $response = $response . '<div class="card" style="margin-bottom:10px;"><div class="card-header bg-' . $color . ' text-white">' . $res['tipo_autor'] . ': <b>' . $res['autor'] . '</b> ' . $res['message'] . ' ' . $data_br . '</div></div>';
+                $response = $response . '<div class="card" style="margin-bottom:10px;">
+                                            <div class="card-header bg-' . $color . ' text-white">' . $res['tipo_autor'] . ': <b>' . $res['autor'] . '</b> ' . $res['message'] . ' ' . $data_br . '</div>
+                                        </div>';
             }
             /**
              * Solicitante - Solicitante
@@ -440,6 +461,8 @@ class DashboardController extends Controller
              * Data no formato BR e remover segundo
              * listar o polo do solicitante
              * diponibilizar anexos dos chamados
+             * SELECT `id`, `form_id`, `object_id`, `object_type`, `sort`, `extra`, `created`, `updated` FROM `ost_form_entry` WHERE `object_id` = $thread_id ORDER BY `object_id` DESC 
+             * SELECT `entry_id`, `field_id`, `value`, `value_id` FROM `ost_form_entry_values` WHERE `entry_id` = 4569 ORDER BY `entry_id` DESC
              *
              */
         }
