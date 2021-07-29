@@ -50,7 +50,7 @@ class DashboardController extends Controller
         END as status_evento,
         ost_ticket_status.name AS status_chamado,
         DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
-        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "COUNT(ost_ticket.ticket_id) AS total";
+        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "COUNT(ost_ticket.number) AS total";
 
         $sql = "SELECT " . $select . "
             FROM ost_thread_event
