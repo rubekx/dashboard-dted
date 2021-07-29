@@ -109,7 +109,7 @@ class DashboardController extends Controller
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
         LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
         LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event)
         AND ost_ticket.status_id = 3
         ORDER BY ost_thread_event.thread_id ASC
         ";
@@ -153,7 +153,7 @@ class DashboardController extends Controller
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
         LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
         LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='reopened' GROUP BY ost_thread_event.thread_id)
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='reopened')
         AND ost_ticket.status_id IN (1,6)
         ORDER BY ost_thread_event.thread_id ASC
         ";
@@ -198,7 +198,7 @@ class DashboardController extends Controller
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
         LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
         LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='assigned' GROUP BY ost_thread_event.thread_id)
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='assigned')
         AND ost_ticket.status_id IN (1,6)
         ORDER BY ost_thread_event.thread_id ASC
         ";
@@ -243,7 +243,7 @@ class DashboardController extends Controller
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
         LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
         LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='transferred' GROUP BY ost_thread_event.thread_id)
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='transferred')
         AND ost_ticket.status_id IN (1,6)
         ORDER BY ost_thread_event.thread_id ASC
         ";
@@ -290,7 +290,7 @@ class DashboardController extends Controller
         LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
         LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
         WHERE
-        ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='overdue' GROUP BY ost_thread_event.thread_id)
+        ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='overdue')
         AND
         ost_thread_event.thread_id not IN (SELECT thread_id from ost_thread_event where ost_thread_event.state ='closed'GROUP BY thread_id ORDER BY id DESC)
         AND
@@ -338,7 +338,7 @@ class DashboardController extends Controller
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
         LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
         LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
+        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event)
         AND ost_ticket.status_id IN (1,6)
         ORDER BY ost_thread_event.thread_id ASC
         ";
