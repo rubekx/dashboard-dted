@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/register', [RegisteredUserController::class, 'create'])
 //                 ->middleware('auth')
 //                 ->name('guest');
+Route::get('/register', function () { return abort(403, 'Unauthorized action.');})->middleware('guest');
 
 Route::post('/register', [RegisteredUserController::class, 'store'])
                 ->middleware('guest');
