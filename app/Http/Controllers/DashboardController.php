@@ -362,39 +362,66 @@ class DashboardController extends Controller
 
     public function getThreadHeader($thread_id)
     {
-        $response = null;
         if (!empty($thread_id)) {
-            $sql = "SELECT
-                ost_form_entry_values.field_id,
-                ost_form_field.form_id,
-                ost_form_field.label,
-                ost_form_entry_values.value
-                FROM ost_form_entry
+            $response = [];
+            $sql = "SELECT ost_form_field.label, ost_form_entry_values.value FROM ost_form_entry
                 JOIN ost_form_entry_values ON ost_form_entry_values.entry_id = ost_form_entry.id
                 JOIN ost_form_field ON ost_form_field.id=ost_form_entry_values.field_id
-                WHERE
-                ost_form_entry.form_id = 2
-                AND
-                ost_form_entry.object_id = '" . $thread_id . "'";
+                JOIN ost_thread ON ost_thread.object_id=ost_form_entry.object_id
+                WHERE ost_form_entry.form_id = 2 AND ost_thread.id = '" . $thread_id . "'";
+
             $result = DB::connection('mysql2')->select($sql);
-            $response = [];
+            $header = '';
             foreach ($result as $res) {
-                $response[] = [
-                    'field_id' => $res->field_id,
-                    'label' => $res->label,
-                    'value' => $res->value,
-                    'tipo' => 0,
+                $header = $header . '<b>' . $res->label . ':</b> ' . $res->value . '<br>';
+            }
+
+            $sql = "SELECT
+                ost_ticket.number,
+                ost_ticket_status.name AS stats,
+                ost_ticket.created,
+                ost_department.name AS department,
+                ost_sla.name AS sla,
+                ost_team.name AS team,
+                ost_help_topic.topic,
+                ost_sla.grace_period
+
+                FROM ost_thread
+                JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
+                JOIN ost_ticket_status ON ost_ticket.status_id = ost_ticket_status.id
+                LEFT JOIN ost_department ON ost_department.id=ost_ticket.dept_id AND ost_ticket.dept_id != 0
+                LEFT JOIN ost_sla ON ost_sla.id=ost_ticket.sla_id AND ost_ticket.sla_id != 0
+                LEFT JOIN ost_staff ON ost_staff.staff_id=ost_ticket.staff_id AND ost_ticket.staff_id != 0
+                LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id AND ost_ticket.topic_id != 0
+                LEFT JOIN ost_team ON ost_team.team_id=ost_ticket.team_id AND ost_ticket.team_id != 0
+                WHERE ost_thread.id = '" . $thread_id . "'";
+
+            $result = DB::connection('mysql2')->select($sql);
+            foreach ($result as $res) {
+                $response = [
+                    ['Chamado' => $res->number],
+                    ['Status' => $res->stats],
+                    ['Data de Criação' => $res->created],
+                    ['Departamento' => empty($res->department) ? null : $res->department],
+                    ['Plano de SLA' => empty($res->sla) ? null : $res->sla],
+                    ['Equipe' => empty($res->team) ? null : $res->team],
+                    ['Tópico de ajuda' => empty($res->topic) ? null : $res->topic],
+                    ['Período de carência' => empty($res->grace_period) ? null : $res->grace_period. ' horas'],
                 ];
             }
+            foreach ($response as $res) {
+                if (!is_null($res[key($res)])) {
+                    $header = $header . '<b>' . key($res) . ':</b> ' . $res[key($res)] . '<br>';
+                }
+            }
         }
-        return $response;
+        return $header;
     }
     public function getThreadEntries($thread_id, $response)
     {
         if (!empty($thread_id)) {
             $sql = "SELECT poster, body, title, CASE WHEN staff_id != 0 THEN 'Staff' ELSE 'Solicitante' END AS ator, created AS data_post FROM ost_thread_entry WHERE thread_id = '" . $thread_id . "' ORDER BY thread_id ASC";
             $result = DB::connection('mysql2')->select($sql);
-            $response = [];
             foreach ($result as $res) {
                 $response[] = [
                     'data_envio' => $res->data_post,
@@ -464,47 +491,45 @@ class DashboardController extends Controller
         return $response;
     }
 
-    public function eventCard($message, $res)
+    public function threadCards($message, $res)
     {
         $data_br = date('d/m/Y H:i:s', strtotime($res['data_envio']));
         $tipo = $res['tipo'] == 1 ? 'postou' : $res['status'];
         $color = $res['tipo_autor'] == "Staff" ? 'secondary' : 'primary';
-        $message = $message . '<div class="card" style="margin-bottom:10px;"><div class="card-header bg-' . $color . ' text-white">' . $res['tipo_autor'] . ': <b>' . $res['autor'] . '</b> ' . $res['message'] . ' ' . $data_br . '</div></div>';
+        $message = $message . '<div class="card" style="margin-bottom:10px;"><div class="card-header bg-' . $color . ' text-white">' . $res['tipo_autor'] . ': <b>' . $res['autor'];
+        if ($res['tipo'] == 1) {
+            $title = $res['title'] != null ? $res['title'] : '';
+            $message = $message . '</b> ' . $tipo . ' ' . $data_br . '  ' . $title . '</div><div class="card-body"><p class="card-text">' . $res['message'] . '</p></div></div></div>';
+        } elseif ($res['tipo'] == 2) {
+            $message = $message . '</b> ' . $res['message'] . ' ' . $data_br . '</div></div>';
+        }
         return $message;
     }
 
-    public function entryCard($message, $res)
+    public function testthreadEntryAjax()
     {
-        $data_br = date('d/m/Y H:i:s', strtotime($res['data_envio']));
-        $tipo = $res['tipo'] == 1 ? 'postou' : $res['status'];
-        $color = $res['tipo_autor'] == "Staff" ? 'secondary' : 'primary';
-        $title = $res['title'] != null ? $res['title'] : '';
-        $message = $message . '<div class="card" style="margin-bottom:10px;"><div class="card-header bg-' . $color . ' text-white">' . $res['tipo_autor'] . ': <b>' . $res['autor'] . '</b> ' . $tipo . ' ' . $data_br . '  ' . $title . '</div>' .
-            '<div class="card-body"><p class="card-text">' . $res['message'] . '</p></div></div></div>';
-        return $message;
+        $thread_data = [];
+        $thread_data = $this->getThreadHeader(2825, $thread_data);
+        $thread_data = json_encode($thread_data);
+        return $thread_data;
     }
 
     public function threadEntryAjax($thread_id)
     {
-        $thread_data[] = [];
+        $message = '';
+
+        $thread_data = [];
+        $header = $this->getThreadHeader($thread_id);
         $thread_data = $this->getThreadEntries($thread_id, $thread_data);
         $thread_data = $this->getThreadEnvents($thread_id, $thread_data);
 
         usort($thread_data, [$this, 'date_compare']);
 
-        // $thread_data = json_encode($thread_data);
-        // return $thread_data;
-
-        $response = '';
         foreach ($thread_data as $res) {
-            if ($res['tipo'] == 1) {
-                $response = $this->entryCard($response, $res);
-            } else {
-                $response = $this->eventCard($response, $res);
-            }
+            $message = $this->threadCards($message, $res);
         }
-
-        return $response;
+        $header = '<div class="alert alert-primary" role="alert">' . $header . '</div>' . $message;
+        return $header;
     }
 
     public function date_compare($element1, $element2)
@@ -530,12 +555,10 @@ class DashboardController extends Controller
             } else {
                 $data = DashboardController::ticketsOpened();
             }
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    $btn = '<a data-toggle="tooltip" data-id="' . $row->thread_id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm showMessages">Detalhes</a>';
-                    return $btn;
-                })
+            return Datatables::of($data)->addIndexColumn()->addColumn('action', function ($row) {
+                $btn = '<a data-toggle="tooltip" data-id="' . $row->thread_id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm showMessages">Detalhes</a>';
+                return $btn;
+            })
                 ->rawColumns(['action'])
                 ->make(true);
         }
@@ -543,37 +566,14 @@ class DashboardController extends Controller
 
     public static function indexTable(Request $request)
     {
-        $ticketsCreated = DashboardController::ticketsCreated(1);
-        $ticketsClosed = DashboardController::ticketsClosed(1);
-        $ticketsReopened = DashboardController::ticketsReopened(1);
-        $ticketsTransferred = DashboardController::ticketsTransferred(1);
-        $ticketsOverdue = DashboardController::ticketsOverdue(1);
-        $ticketsOpened = DashboardController::ticketsOpened(1);
-        // if ($request->ajax()) {
-        //     info($request->ajax());
-        //     $data = DashboardController::ticketsCreated();
-        //     return Datatables::of($data)
-        //         ->addIndexColumn()
-        //         ->addColumn('action', function ($row) {
-
-        //             $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->ticket_id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editCustomer">Edit</a>';
-
-        //             $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->ticket_id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteCustomer">Delete</a>';
-
-        //             return $btn;
-        //         })
-        //         ->rawColumns(['action'])
-        //         ->make(true);
-        // }
-        return view('dashboard')
-            ->with([
-                'ticketsCreated' => $ticketsCreated[0]->total,
-                'ticketsClosed' => $ticketsClosed[0]->total,
-                'ticketsReopened' => $ticketsReopened[0]->total,
-                'ticketsTransferred' => $ticketsTransferred[0]->total,
-                'ticketsOverdue' => $ticketsOverdue[0]->total,
-                'ticketsOpened' => $ticketsOpened[0]->total,
-            ]);
+        return view('dashboard')->with([
+            'ticketsCreated' => DashboardController::ticketsCreated(1)[0]->total,
+            'ticketsClosed' => DashboardController::ticketsClosed(1)[0]->total,
+            'ticketsReopened' => DashboardController::ticketsReopened(1)[0]->total,
+            'ticketsTransferred' => DashboardController::ticketsTransferred(1)[0]->total,
+            'ticketsOverdue' => DashboardController::ticketsOverdue(1)[0]->total,
+            'ticketsOpened' => DashboardController::ticketsOpened(1)[0]->total,
+        ]);
     }
 
 }

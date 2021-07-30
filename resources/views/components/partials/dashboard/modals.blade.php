@@ -294,7 +294,7 @@
       
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Conteúdo do Chamado</h4>
+          <h4 class="modal-title">Detalhes do Chamado</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         
