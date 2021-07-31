@@ -88,20 +88,6 @@ class DashboardController extends Controller
         return $where;
     }
 
-    /**
-     * 230226
-     * Solicitante - Solicitante
-     * Staff - legenda (secretario / tecnico dted)
-     * Detalhe - De "fulano' atribuido para 'outro fulano"
-     * Adicionar caixa criada pelo sistema com status (Ex: Marcado em atraso)
-     * Data no formato BR e remover segundo
-     * listar o polo do solicitante
-     * diponibilizar anexos dos chamados
-     * SELECT `id`, `form_id`, `object_id`, `object_type`, `sort`, `extra`, `created`, `updated` FROM `ost_form_entry` WHERE `object_id` = $thread_id ORDER BY `object_id` DESC
-     * SELECT `entry_id`, `field_id`, `value`, `value_id` FROM `ost_form_entry_values` WHERE `entry_id` = 4569 ORDER BY `entry_id` DESC
-     *
-     */
-
     public function formEntryValues($thread_id)
     {
         $response = null;
@@ -277,16 +263,16 @@ class DashboardController extends Controller
     public function threadEntryAjax($thread_id)
     {
         $message = '';
-        $thread_data = [];
+        $thread_data = [];       
         $header = $this->threadHeader($thread_id);
+        $message = $header . $message;
         $thread_data = $this->threadEntries($thread_id, $thread_data);
         $thread_data = $this->threadEnvents($thread_id, $thread_data);
         usort($thread_data, [$this, 'date_compare']);
         foreach ($thread_data as $element) {
             $message = $this->threadCard($message, $element);
         }
-        $header = $header . $message;
-        return $header;
+        return $message;
     }
 
     public function date_compare($element1, $element2)
