@@ -13,31 +13,28 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public static function index()
+
+    public function tickets($type, $count = null)
     {
-        return DashboardController::ticketsCreated();
+        $field = $this->ticketQueryField($count);
+        $where = $this->ticketQueryWhere($type);
+        $tables = $this->ticketQueryTable();
+        $order_by = "ORDER BY ost_thread_event.thread_id ASC";
+        $sql = "SELECT " . $field . " " . $tables . " " . $where . " " . $order_by;
+        return DB::connection('mysql2')->select($sql);
     }
 
-    // public static function json1(){
-    //     return DashboardController::ticketsCreated();
-    // }
-
-    // public static function json2(){
-    //     return DashboardController::ticketsCreated(1);
-    // }
-
-    public static function ticketsCreated($count = null)
+    public function ticketQueryField($count = null)
     {
-        $select = $count == null ? "ost_ticket.ticket_id,
-        ost_ticket.number AS chamado,
+        $field = $count == null ? "ost_ticket.number AS chamado,
         ost_ticket.ticket_id,
         ost_user.name AS usuario,
         ost_user_email.address AS email,
         ost_user__cdata.phone AS telefone,
         ost_help_topic.topic AS curso,
         ost_ticket__cdata.subject AS assunto,
-        ost_department.name as departamento,
-        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
+        ost_department.name AS departamento,
+        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) AS staff,
         ost_thread_event.thread_id,
         CASE
             WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
@@ -47,238 +44,16 @@ class DashboardController extends Controller
             WHEN ost_thread_event.state = 'resent' THEN 'Reenviado'
             WHEN ost_thread_event.state = 'edited' THEN 'Editado'
             ELSE ost_thread_event.state
-        END as status_evento,
+        END AS status_evento,
         ost_ticket_status.name AS status_chamado,
         DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
         DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "COUNT(ost_ticket.number) AS total";
-
-        $sql = "SELECT " . $select . "
-            FROM ost_thread_event
-            LEFT JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
-            JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-            LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-            LEFT JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
-            LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
-            LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
-            LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
-            LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
-            LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
-            LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
-
-            WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
-
-            ORDER BY ost_thread_event.thread_id ASC";
-        return DB::connection('mysql2')->select($sql);
-
+        return $field;
     }
 
-    public static function ticketsClosed($count = null)
+    public function ticketQueryTable()
     {
-        $select = $count == null ? "ost_ticket.number AS chamado,
-        ost_ticket.ticket_id,
-        ost_user.name AS usuario,
-        ost_user_email.address AS email,
-        ost_user__cdata.phone AS telefone,
-        ost_help_topic.topic AS curso,
-        ost_ticket__cdata.subject AS assunto,
-        ost_department.name as departamento,
-        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
-        ost_thread_event.thread_id,
-        CASE
-            WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
-            WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
-            WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
-            WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado'
-            WHEN ost_thread_event.state = 'resent' THEN 'Reenviado'
-            WHEN ost_thread_event.state = 'edited' THEN 'Editado'
-            ELSE ost_thread_event.state
-        END as status_evento,
-        ost_ticket_status.name AS status_chamado,
-        DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
-        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "count(ost_ticket.number) as total";
-
-        $sql = "SELECT " . $select . "
-        FROM ost_thread_event
-        LEFT JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
-        JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-        LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-        LEFT JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
-        LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
-        LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
-        LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
-        LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
-        LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
-        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
-        AND ost_ticket.status_id = 3
-        ORDER BY ost_thread_event.thread_id ASC
-        ";
-        return DB::connection('mysql2')->select($sql);
-    }
-
-    public static function ticketsReopened($count = null)
-    {
-        $select = $count == null ? "ost_ticket.number AS chamado,
-        ost_ticket.ticket_id,
-        ost_user.name AS usuario,
-        ost_user_email.address AS email,
-        ost_user__cdata.phone AS telefone,
-        ost_help_topic.topic AS curso,
-        ost_ticket__cdata.subject AS assunto,
-        ost_department.name as departamento,
-        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
-        ost_thread_event.thread_id,
-        CASE
-            WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
-            WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
-            WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
-            WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado'
-            WHEN ost_thread_event.state = 'resent' THEN 'Reenviado'
-            WHEN ost_thread_event.state = 'edited' THEN 'Editado'
-            ELSE ost_thread_event.state
-        END as status_evento,
-        ost_ticket_status.name AS status_chamado,
-        DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
-        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "count(ost_ticket.number) as total";
-
-        $sql = "SELECT " . $select . "
-        FROM ost_thread_event
-        LEFT JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
-        JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-        LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-        LEFT JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
-        LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
-        LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
-        LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
-        LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
-        LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
-        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='reopened' GROUP BY ost_thread_event.thread_id)
-        AND ost_ticket.status_id IN (1,6)
-        ORDER BY ost_thread_event.thread_id ASC
-        ";
-        return DB::connection('mysql2')->select($sql);
-    }
-
-    public static function ticketsAssigned($count = null)
-    {
-        $select = $count == null ? "ost_ticket.number AS chamado,
-        ost_ticket.ticket_id,
-        ost_user.name AS usuario,
-        ost_user_email.address AS email,
-        ost_user__cdata.phone AS telefone,
-        ost_help_topic.topic AS curso,
-        ost_ticket__cdata.subject AS assunto,
-        ost_department.name as departamento,
-        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
-        ost_thread_event.thread_id,
-        CASE
-            WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
-            WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
-            WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
-            WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado'
-            WHEN ost_thread_event.state = 'resent' THEN 'Reenviado'
-            WHEN ost_thread_event.state = 'edited' THEN 'Editado'
-            ELSE ost_thread_event.state
-        END as status_evento,
-        ost_ticket_status.name AS status_chamado,
-        DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
-        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "count(ost_ticket.number) as total";
-
-        $sql = "SELECT " . $select . "
-
-        FROM ost_thread_event
-        LEFT JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
-        JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-        LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-        LEFT JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
-        LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
-        LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
-        LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
-        LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
-        LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
-        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='assigned' GROUP BY ost_thread_event.thread_id)
-        AND ost_ticket.status_id IN (1,6)
-        ORDER BY ost_thread_event.thread_id ASC
-        ";
-        return DB::connection('mysql2')->select($sql);
-    }
-
-    public static function ticketsTransferred($count = null)
-    {
-        $select = $count == null ? "ost_ticket.number AS chamado,
-        ost_ticket.ticket_id,
-        ost_user.name AS usuario,
-        ost_user_email.address AS email,
-        ost_user__cdata.phone AS telefone,
-        ost_help_topic.topic AS curso,
-        ost_ticket__cdata.subject AS assunto,
-        ost_department.name as departamento,
-        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
-        ost_thread_event.thread_id,
-        CASE
-            WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
-            WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
-            WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
-            WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado'
-            WHEN ost_thread_event.state = 'resent' THEN 'Reenviado'
-            WHEN ost_thread_event.state = 'edited' THEN 'Editado'
-            ELSE ost_thread_event.state
-        END as status_evento,
-        ost_ticket_status.name AS status_chamado,
-        DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
-        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "count(ost_ticket.number) as total";
-
-        $sql = "SELECT " . $select . "
-
-        FROM ost_thread_event
-        LEFT JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
-        JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-        LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-        LEFT JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
-        LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
-        LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
-        LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
-        LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
-        LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
-        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='transferred' GROUP BY ost_thread_event.thread_id)
-        AND ost_ticket.status_id IN (1,6)
-        ORDER BY ost_thread_event.thread_id ASC
-        ";
-        return DB::connection('mysql2')->select($sql);
-    }
-
-    public static function ticketsOverdue($count = null)
-    {
-        $select = $count == null ? "ost_ticket.number AS chamado,
-        ost_ticket.ticket_id,
-        ost_user.name AS usuario,
-        ost_user_email.address AS email,
-        ost_user__cdata.phone AS telefone,
-        /*ost_help_topic.topic AS curso,*/
-        ost_ticket__cdata.subject AS assunto,
-        ost_thread_event.staff_id,
-        ost_thread_event.dept_id,
-        ost_department.name as departamento,
-        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
-        ost_thread_event.thread_id,
-        CASE
-            WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
-            WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
-            WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
-            WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado'
-            WHEN ost_thread_event.state = 'resent' THEN 'Reenviado'
-            WHEN ost_thread_event.state = 'edited' THEN 'Editado'
-            ELSE ost_thread_event.state
-        END as status_evento,
-        ost_ticket_status.name AS status_chamado,
-        DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
-        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "count(ost_ticket.number) as total";
-
-        $sql = "SELECT " . $select . "
-        FROM ost_thread_event
+        $table = "FROM ost_thread_event
         JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
         JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
         LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
@@ -288,62 +63,29 @@ class DashboardController extends Controller
         LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
         LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
         LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
-        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
-        WHERE
-        ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='overdue' GROUP BY ost_thread_event.thread_id)
-        AND
-        ost_thread_event.thread_id not IN (SELECT thread_id from ost_thread_event where ost_thread_event.state ='closed'GROUP BY thread_id ORDER BY id DESC)
-        AND
-        ost_ticket.status_id IN (1,6)
-        ORDER BY ost_thread_event.thread_id ASC
-        ";
-
-        return DB::connection('mysql2')->select($sql);
+        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id";
+        return $table;
     }
 
-    public static function ticketsOpened($count = null)
+    public function ticketQueryWhere($type)
     {
-        $select = $count == null ? "ost_ticket.number AS chamado,
-        ost_ticket.ticket_id,
-        ost_user.name AS usuario,
-        ost_user_email.address AS email,
-        ost_user__cdata.phone AS telefone,
-        ost_help_topic.topic AS curso,
-        ost_ticket__cdata.subject AS assunto,
-        ost_department.name as departamento,
-        CONCAT(ost_staff.firstname,' ',ost_staff.lastname) as staff,
-        ost_thread_event.thread_id,
-        CASE
-            WHEN ost_thread_event.state = 'closed' THEN 'Fechado'
-            WHEN ost_thread_event.state = 'transferred' THEN 'Transferido'
-            WHEN ost_thread_event.state = 'reopened' THEN 'Reaberto'
-            WHEN ost_thread_event.state = 'overdue' THEN 'Atrasado'
-            WHEN ost_thread_event.state = 'resent' THEN 'Reenviado'
-            WHEN ost_thread_event.state = 'edited' THEN 'Editado'
-            ELSE ost_thread_event.state
-        END as status_evento,
-        ost_ticket_status.name AS status_chamado,
-        DATE_FORMAT(ost_ticket.lastupdate, '%d/%m/%Y %H:%i:%s') ultima_atualizacao,
-        DATE_FORMAT(ost_ticket.created, '%d/%m/%Y %H:%i:%s') envio" : "count(ost_ticket.number) as total";
-
-        $sql = "SELECT " . $select . "
-        FROM ost_thread_event
-        LEFT JOIN ost_thread ON ost_thread.id=ost_thread_event.thread_id
-        JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-        LEFT JOIN ost_ticket__cdata ON ost_ticket__cdata.ticket_id=ost_ticket.ticket_id
-        LEFT JOIN ost_ticket_status ON ost_ticket_status.id=ost_ticket.status_id
-        LEFT JOIN ost_user ON ost_user.id=ost_ticket.user_id
-        LEFT JOIN ost_user__cdata ON ost_user__cdata.user_id=ost_user.id
-        LEFT JOIN ost_user_email ON ost_user_email.user_id=ost_user.id
-        LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id
-        LEFT JOIN ost_staff ON ost_staff.staff_id=ost_thread_event.staff_id
-        LEFT JOIN ost_department ON ost_department.id=ost_thread_event.dept_id
-        WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)
-        AND ost_ticket.status_id IN (1,6)
-        ORDER BY ost_thread_event.thread_id ASC
-        ";
-
-        return DB::connection('mysql2')->select($sql);
+        $where = '';
+        if ($type == 1) {
+            $where = 'WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id)';
+        } elseif ($type == 2) {
+            $where = "WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id) AND ost_ticket.status_id = 3";
+        } elseif ($type == 3) {
+            $where = "WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='reopened' GROUP BY ost_thread_event.thread_id) AND ost_ticket.status_id IN (1,6)";
+        } elseif ($type == 4) {
+            $where = "WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='transferred' GROUP BY ost_thread_event.thread_id) AND ost_ticket.status_id IN (1,6)";
+        } elseif ($type == 5) {
+            $where = "WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event WHERE ost_thread_event.state ='overdue' GROUP BY ost_thread_event.thread_id)
+            AND ost_thread_event.thread_id not IN (SELECT thread_id from ost_thread_event where ost_thread_event.state ='closed'GROUP BY thread_id ORDER BY id DESC)
+            AND ost_ticket.status_id IN (1,6)";
+        } elseif ($type == 6) {
+            $where = "WHERE ost_thread_event.id IN (SELECT MAX(ost_thread_event.id) FROM ost_thread_event GROUP BY ost_thread_event.thread_id) AND ost_ticket.status_id IN (1,6)";
+        }
+        return $where;
     }
 
     /**
@@ -360,7 +102,7 @@ class DashboardController extends Controller
      *
      */
 
-    public function getFormEntryValues($thread_id)
+    public function formEntryValues($thread_id)
     {
         $response = null;
         if (!empty($thread_id)) {
@@ -374,7 +116,7 @@ class DashboardController extends Controller
         return $response;
     }
 
-    public function getTicketDetails($thread_id)
+    public function ticketDetails($thread_id)
     {
         $response = null;
         if (!empty($thread_id)) {
@@ -414,12 +156,12 @@ class DashboardController extends Controller
         return $response;
     }
 
-    public function getThreadHeader($thread_id)
+    public function threadHeader($thread_id)
     {
+        $header = '';
         if (!empty($thread_id)) {
-            $header = '';
-            $ticket_details = $this->getTicketDetails($thread_id);
-            $form_entry_values = $this->getFormEntryValues($thread_id);
+            $ticket_details = $this->ticketDetails($thread_id);
+            $form_entry_values = $this->formEntryValues($thread_id);
             foreach ($form_entry_values as $element) {
                 $header = $this->headerCard($header, $element->label, $element->value);
             }
@@ -433,7 +175,7 @@ class DashboardController extends Controller
         return $header;
     }
 
-    public function getThreadEntries($thread_id, $response)
+    public function threadEntries($thread_id, $response)
     {
         if (!empty($thread_id)) {
             $sql = "SELECT poster, body, title, CASE WHEN staff_id != 0 THEN 'Staff' ELSE 'Solicitante' END AS ator, created AS data_post FROM ost_thread_entry WHERE thread_id = '" . $thread_id . "' ORDER BY thread_id ASC";
@@ -451,7 +193,7 @@ class DashboardController extends Controller
         }
         return $response;
     }
-    public function getThreadEnvents($thread_id, $response)
+    public function threadEnvents($thread_id, $response)
     {
         if (!empty($thread_id)) {
             $sql = "SELECT ost_thread_event.staff_id,
@@ -462,7 +204,7 @@ class DashboardController extends Controller
                 WHEN ost_thread_event.username='SYSTEM' THEN 'Sistema'
                 WHEN ost_thread_event.uid_type='S' THEN CONCAT(ost_staff.firstname,' ',ost_staff.lastname)
                 WHEN ost_thread_event.uid_type='U' THEN ost_user.name
-            END as autor,
+            END AS autor,
             CASE
                 WHEN ost_thread_event.state = 'closed' THEN 'fechou'
                 WHEN ost_thread_event.state = 'transferred' THEN CONCAT('transferiu para',' <b>', ost_department.name,'</b>')
@@ -474,12 +216,12 @@ class DashboardController extends Controller
                 WHEN ost_thread_event.state = 'assigned' AND ost_thread_event.data NOT LIKE '%team%' THEN CONCAT('atribuiu isto a',' <b>',staff.firstname,' ',staff.lastname,'</b>')
                 WHEN ost_thread_event.state = 'created' THEN 'criou'
                 ELSE ost_thread_event.state
-            END as status_evento,
+            END AS status_evento,
             CASE
                 WHEN ost_thread_event.uid IS NULL AND ost_thread_event.state ='reopened' THEN 'Solicitante'
                 WHEN ost_thread_event.uid_type = 'S' THEN 'Staff'
                 WHEN ost_thread_event.uid_type = 'U' THEN 'Solicitante'
-            END as tipo_autor,
+            END AS tipo_autor,
             ost_thread_event.uid,
             ost_thread_event.timestamp AS data_post,
             ost_thread_event.username
@@ -536,9 +278,9 @@ class DashboardController extends Controller
     {
         $message = '';
         $thread_data = [];
-        $header = $this->getThreadHeader($thread_id);
-        $thread_data = $this->getThreadEntries($thread_id, $thread_data);
-        $thread_data = $this->getThreadEnvents($thread_id, $thread_data);
+        $header = $this->threadHeader($thread_id);
+        $thread_data = $this->threadEntries($thread_id, $thread_data);
+        $thread_data = $this->threadEnvents($thread_id, $thread_data);
         usort($thread_data, [$this, 'date_compare']);
         foreach ($thread_data as $element) {
             $message = $this->threadCard($message, $element);
@@ -554,39 +296,26 @@ class DashboardController extends Controller
         return $datetime1 - $datetime2;
     }
 
-    public static function ticketsTableAjax(Request $request)
+    public function ticketsTableAjax(Request $request)
     {
         if ($request->ajax()) {
-            if ($request->type == 1) {
-                $data = DashboardController::ticketsCreated();
-            } elseif ($request->type == 2) {
-                $data = DashboardController::ticketsClosed();
-            } elseif ($request->type == 3) {
-                $data = DashboardController::ticketsReopened();
-            } elseif ($request->type == 4) {
-                $data = DashboardController::ticketsTransferred();
-            } elseif ($request->type == 5) {
-                $data = DashboardController::ticketsOverdue();
-            } else {
-                $data = DashboardController::ticketsOpened();
-            }
+            $data = $this->tickets($request->type);
             return Datatables::of($data)->addIndexColumn()->addColumn('action', function ($row) {
                 $btn = '<a data-toggle="tooltip" data-id="' . $row->thread_id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm showMessages">Detalhes</a>';
                 return $btn;
-            }) ->rawColumns(['action'])->make(true);
+            })->rawColumns(['action'])->make(true);
         }
     }
 
-    public static function indexTable(Request $request)
+    public function indexTable()
     {
         return view('dashboard')->with([
-            'ticketsCreated' => DashboardController::ticketsCreated(1)[0]->total,
-            'ticketsClosed' => DashboardController::ticketsClosed(1)[0]->total,
-            'ticketsReopened' => DashboardController::ticketsReopened(1)[0]->total,
-            'ticketsTransferred' => DashboardController::ticketsTransferred(1)[0]->total,
-            'ticketsOverdue' => DashboardController::ticketsOverdue(1)[0]->total,
-            'ticketsOpened' => DashboardController::ticketsOpened(1)[0]->total,
+            'ticketsCreated' => $this->tickets(1, 1)[0]->total,
+            'ticketsClosed' => $this->tickets(2, 1)[0]->total,
+            'ticketsReopened' => $this->tickets(3, 1)[0]->total,
+            'ticketsTransferred' => $this->tickets(4, 1)[0]->total,
+            'ticketsOverdue' => $this->tickets(5, 1)[0]->total,
+            'ticketsOpened' => $this->tickets(6, 1)[0]->total,
         ]);
     }
-
 }
