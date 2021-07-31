@@ -360,76 +360,92 @@ class DashboardController extends Controller
      *
      */
 
+    public function getFormEntryValues($thread_id)
+    {
+        $response = null;
+        if (!empty($thread_id)) {
+            $sql = "SELECT ost_form_field.label, ost_form_entry_values.value FROM ost_form_entry
+            JOIN ost_form_entry_values ON ost_form_entry_values.entry_id = ost_form_entry.id
+            JOIN ost_form_field ON ost_form_field.id=ost_form_entry_values.field_id
+            JOIN ost_thread ON ost_thread.object_id=ost_form_entry.object_id
+            WHERE ost_form_entry.form_id = 2 AND ost_thread.id = '" . $thread_id . "'";
+            $response = DB::connection('mysql2')->select($sql);
+        }
+        return $response;
+    }
+
+    public function getTicketDetails($thread_id)
+    {
+        $response = null;
+        if (!empty($thread_id)) {
+            $sql = "SELECT
+            ost_ticket.number,
+            ost_ticket_status.name AS stats,
+            ost_ticket.created,
+            ost_department.name AS department,
+            ost_sla.name AS sla,
+            ost_team.name AS team,
+            ost_help_topic.topic,
+            ost_sla.grace_period
+            FROM ost_thread
+            JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
+            JOIN ost_ticket_status ON ost_ticket.status_id = ost_ticket_status.id
+            LEFT JOIN ost_department ON ost_department.id=ost_ticket.dept_id AND ost_ticket.dept_id != 0
+            LEFT JOIN ost_sla ON ost_sla.id=ost_ticket.sla_id AND ost_ticket.sla_id != 0
+            LEFT JOIN ost_staff ON ost_staff.staff_id=ost_ticket.staff_id AND ost_ticket.staff_id != 0
+            LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id AND ost_ticket.topic_id != 0
+            LEFT JOIN ost_team ON ost_team.team_id=ost_ticket.team_id AND ost_ticket.team_id != 0
+            WHERE ost_thread.id = '" . $thread_id . "'";
+            $response = DB::connection('mysql2')->select($sql);
+
+            foreach ($response as $element) {
+                $response = [
+                    ['Chamado' => $element->number],
+                    ['Status' => $element->stats],
+                    ['Data de Criação' => $element->created],
+                    ['Departamento' => empty($element->department) ? null : $element->department],
+                    ['Plano de SLA' => empty($element->sla) ? null : $element->sla],
+                    ['Equipe' => empty($element->team) ? null : $element->team],
+                    ['Tópico de ajuda' => empty($element->topic) ? null : $element->topic],
+                    ['Período de carência' => empty($element->grace_period) ? null : $element->grace_period . ' horas'],
+                ];
+            }
+        }
+        return $response;
+    }
+
     public function getThreadHeader($thread_id)
     {
         if (!empty($thread_id)) {
-            $response = [];
-            $sql = "SELECT ost_form_field.label, ost_form_entry_values.value FROM ost_form_entry
-                JOIN ost_form_entry_values ON ost_form_entry_values.entry_id = ost_form_entry.id
-                JOIN ost_form_field ON ost_form_field.id=ost_form_entry_values.field_id
-                JOIN ost_thread ON ost_thread.object_id=ost_form_entry.object_id
-                WHERE ost_form_entry.form_id = 2 AND ost_thread.id = '" . $thread_id . "'";
-
-            $result = DB::connection('mysql2')->select($sql);
             $header = '';
-            foreach ($result as $res) {
-                $header = $header . '<b>' . $res->label . ':</b> ' . $res->value . '<br>';
+            $ticket_details = $this->getTicketDetails($thread_id);
+            $form_entry_values = $this->getFormEntryValues($thread_id);
+            foreach ($form_entry_values as $element) {
+                $header = $this->headerCard($header, $element->label, $element->value);
             }
-
-            $sql = "SELECT
-                ost_ticket.number,
-                ost_ticket_status.name AS stats,
-                ost_ticket.created,
-                ost_department.name AS department,
-                ost_sla.name AS sla,
-                ost_team.name AS team,
-                ost_help_topic.topic,
-                ost_sla.grace_period
-
-                FROM ost_thread
-                JOIN ost_ticket ON ost_ticket.ticket_id=ost_thread.object_id
-                JOIN ost_ticket_status ON ost_ticket.status_id = ost_ticket_status.id
-                LEFT JOIN ost_department ON ost_department.id=ost_ticket.dept_id AND ost_ticket.dept_id != 0
-                LEFT JOIN ost_sla ON ost_sla.id=ost_ticket.sla_id AND ost_ticket.sla_id != 0
-                LEFT JOIN ost_staff ON ost_staff.staff_id=ost_ticket.staff_id AND ost_ticket.staff_id != 0
-                LEFT JOIN ost_help_topic ON ost_help_topic.topic_id=ost_ticket.topic_id AND ost_ticket.topic_id != 0
-                LEFT JOIN ost_team ON ost_team.team_id=ost_ticket.team_id AND ost_ticket.team_id != 0
-                WHERE ost_thread.id = '" . $thread_id . "'";
-
-            $result = DB::connection('mysql2')->select($sql);
-            foreach ($result as $res) {
-                $response = [
-                    ['Chamado' => $res->number],
-                    ['Status' => $res->stats],
-                    ['Data de Criação' => $res->created],
-                    ['Departamento' => empty($res->department) ? null : $res->department],
-                    ['Plano de SLA' => empty($res->sla) ? null : $res->sla],
-                    ['Equipe' => empty($res->team) ? null : $res->team],
-                    ['Tópico de ajuda' => empty($res->topic) ? null : $res->topic],
-                    ['Período de carência' => empty($res->grace_period) ? null : $res->grace_period. ' horas'],
-                ];
-            }
-            foreach ($response as $res) {
-                if (!is_null($res[key($res)])) {
-                    $header = $header . '<b>' . key($res) . ':</b> ' . $res[key($res)] . '<br>';
+            foreach ($ticket_details as $element) {
+                if (!is_null($element[key($element)])) {
+                    $header = $this->headerCard($header, key($element), $element[key($element)]);
                 }
             }
         }
+        $header = $this->headerCard($header);
         return $header;
     }
+
     public function getThreadEntries($thread_id, $response)
     {
         if (!empty($thread_id)) {
             $sql = "SELECT poster, body, title, CASE WHEN staff_id != 0 THEN 'Staff' ELSE 'Solicitante' END AS ator, created AS data_post FROM ost_thread_entry WHERE thread_id = '" . $thread_id . "' ORDER BY thread_id ASC";
             $result = DB::connection('mysql2')->select($sql);
-            foreach ($result as $res) {
+            foreach ($result as $element) {
                 $response[] = [
-                    'data_envio' => $res->data_post,
-                    'autor' => $res->poster,
-                    'tipo_autor' => $res->ator,
-                    'message' => $res->body,
+                    'data_envio' => $element->data_post,
+                    'autor' => $element->poster,
+                    'tipo_autor' => $element->ator,
+                    'message' => $element->body,
                     'tipo' => 1,
-                    'title' => $res->title,
+                    'title' => $element->title,
                 ];
             }
         }
@@ -477,13 +493,13 @@ class DashboardController extends Controller
             ORDER BY ost_thread_event.thread_id ASC";
 
             $result = DB::connection('mysql2')->select($sql);
-            foreach ($result as $res) {
+            foreach ($result as $element) {
                 $response[] = [
-                    'data_envio' => $res->data_post,
-                    'autor' => $res->autor,
-                    'status' => $res->status_evento,
-                    'tipo_autor' => $res->tipo_autor,
-                    'message' => $res->status_evento,
+                    'data_envio' => $element->data_post,
+                    'autor' => $element->autor,
+                    'status' => $element->status_evento,
+                    'tipo_autor' => $element->tipo_autor,
+                    'message' => $element->status_evento,
                     'tipo' => 2,
                 ];
             }
@@ -491,44 +507,43 @@ class DashboardController extends Controller
         return $response;
     }
 
-    public function threadCards($message, $res)
+    public function threadCard($message, $element)
     {
-        $data_br = date('d/m/Y H:i:s', strtotime($res['data_envio']));
-        $tipo = $res['tipo'] == 1 ? 'postou' : $res['status'];
-        $color = $res['tipo_autor'] == "Staff" ? 'secondary' : 'primary';
-        $message = $message . '<div class="card" style="margin-bottom:10px;"><div class="card-header bg-' . $color . ' text-white">' . $res['tipo_autor'] . ': <b>' . $res['autor'];
-        if ($res['tipo'] == 1) {
-            $title = $res['title'] != null ? $res['title'] : '';
-            $message = $message . '</b> ' . $tipo . ' ' . $data_br . '  ' . $title . '</div><div class="card-body"><p class="card-text">' . $res['message'] . '</p></div></div></div>';
-        } elseif ($res['tipo'] == 2) {
-            $message = $message . '</b> ' . $res['message'] . ' ' . $data_br . '</div></div>';
+        $data_br = date('d/m/Y H:i:s', strtotime($element['data_envio']));
+        $tipo = $element['tipo'] == 1 ? 'postou' : $element['status'];
+        $color = $element['tipo_autor'] == "Staff" ? 'secondary' : 'primary';
+        $message = $message . '<div class="card" style="margin-bottom:10px;"><div class="card-header bg-' . $color . ' text-white">' . $element['tipo_autor'] . ': <b>' . $element['autor'];
+        if ($element['tipo'] == 1) {
+            $title = $element['title'] != null ? $element['title'] : '';
+            $message = $message . '</b> ' . $tipo . ' ' . $data_br . '  ' . $title . '</div><div class="card-body"><p class="card-text">' . $element['message'] . '</p></div></div></div>';
+        } elseif ($element['tipo'] == 2) {
+            $message = $message . '</b> ' . $element['message'] . ' ' . $data_br . '</div></div>';
         }
         return $message;
     }
 
-    public function testthreadEntryAjax()
+    public function headerCard($message, $key = null, $value = null)
     {
-        $thread_data = [];
-        $thread_data = $this->getThreadHeader(2825, $thread_data);
-        $thread_data = json_encode($thread_data);
-        return $thread_data;
+        if (!is_null($key) && !is_null($value)) {
+            $message = $message . '<b>' . $key . ':</b> ' . $value . '<br>';
+        } else {
+            $message = '<div class="alert alert-primary" role="alert">' . $message . '</div>';
+        }
+        return $message;
     }
 
     public function threadEntryAjax($thread_id)
     {
         $message = '';
-
         $thread_data = [];
         $header = $this->getThreadHeader($thread_id);
         $thread_data = $this->getThreadEntries($thread_id, $thread_data);
         $thread_data = $this->getThreadEnvents($thread_id, $thread_data);
-
         usort($thread_data, [$this, 'date_compare']);
-
-        foreach ($thread_data as $res) {
-            $message = $this->threadCards($message, $res);
+        foreach ($thread_data as $element) {
+            $message = $this->threadCard($message, $element);
         }
-        $header = '<div class="alert alert-primary" role="alert">' . $header . '</div>' . $message;
+        $header = $header . $message;
         return $header;
     }
 
@@ -558,9 +573,7 @@ class DashboardController extends Controller
             return Datatables::of($data)->addIndexColumn()->addColumn('action', function ($row) {
                 $btn = '<a data-toggle="tooltip" data-id="' . $row->thread_id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm showMessages">Detalhes</a>';
                 return $btn;
-            })
-                ->rawColumns(['action'])
-                ->make(true);
+            }) ->rawColumns(['action'])->make(true);
         }
     }
 
