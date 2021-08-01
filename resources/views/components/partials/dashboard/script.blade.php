@@ -9,7 +9,7 @@
 
         $('#modalTicketsCreated').on('shown.bs.modal', function() {
             var table = $('#tableTicketsCreated').DataTable({
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+                "lengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "Todos"]],
                 responsive: true,
                 ////  dom: 'Bfrtip',
                 buttons: [
@@ -44,7 +44,7 @@
               
         $('#modalTicketsClosed').on('shown.bs.modal', function() {
             var table = $('#tableTicketsClosed').DataTable({
-                "lengthMenu": [ 5,10, 25, 50, 100 ],
+                "lengthMenu": [5,10, 25, 50, 100 ],
                //  dom: 'Bfrtip',
                 buttons: [
                     'csv', 'excel'
@@ -151,7 +151,6 @@
         });
 
         $('#modalTicketsOverdue').on('shown.bs.modal', function() {
-
             var table = $('#tableTicketsOverdue').DataTable({
                 "lengthMenu": [ 5,10, 25, 50, 100 ],
                //  dom: 'Bfrtip',

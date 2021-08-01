@@ -164,7 +164,12 @@ class DashboardController extends Controller
     public function threadEntries($thread_id, $response)
     {
         if (!empty($thread_id)) {
-            $sql = "SELECT poster, body, title, CASE WHEN staff_id != 0 THEN 'Staff' ELSE 'Solicitante' END AS ator, created AS data_post FROM ost_thread_entry WHERE thread_id = '" . $thread_id . "' ORDER BY thread_id ASC";
+            $sql = "SELECT poster,body,title, 
+            CASE 
+                WHEN staff_id != 0 THEN 'Staff' 
+                ELSE 'Solicitante' 
+            END AS ator, created AS data_post 
+            FROM ost_thread_entry WHERE thread_id = '" . $thread_id . "' ORDER BY thread_id ASC";
             $result = DB::connection('mysql2')->select($sql);
             foreach ($result as $element) {
                 $response[] = [
