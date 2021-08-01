@@ -14,6 +14,8 @@ class DashboardController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    // https://www.onlinecode.org/jquery-datatable-server-side-sortingpagination-and-searching-using-php-and-mysql/
+
     public function tickets($type, $count = null)
     {
         $field = $this->ticketQueryField($count);
@@ -164,11 +166,11 @@ class DashboardController extends Controller
     public function threadEntries($thread_id, $response)
     {
         if (!empty($thread_id)) {
-            $sql = "SELECT poster,body,title, 
-            CASE 
-                WHEN staff_id != 0 THEN 'Staff' 
-                ELSE 'Solicitante' 
-            END AS ator, created AS data_post 
+            $sql = "SELECT poster,body,title,
+            CASE
+                WHEN staff_id != 0 THEN 'Staff'
+                ELSE 'Solicitante'
+            END AS ator, created AS data_post
             FROM ost_thread_entry WHERE thread_id = '" . $thread_id . "' ORDER BY thread_id ASC";
             $result = DB::connection('mysql2')->select($sql);
             foreach ($result as $element) {
@@ -268,7 +270,7 @@ class DashboardController extends Controller
     public function threadEntryAjax($thread_id)
     {
         $message = '';
-        $thread_data = [];       
+        $thread_data = [];
         $header = $this->threadHeader($thread_id);
         $message = $header . $message;
         $thread_data = $this->threadEntries($thread_id, $thread_data);
@@ -301,12 +303,21 @@ class DashboardController extends Controller
     public function indexTable()
     {
         return view('dashboard')->with([
-            'ticketsCreated' => $this->tickets(1, 1)[0]->total,
-            'ticketsClosed' => $this->tickets(2, 1)[0]->total,
-            'ticketsReopened' => $this->tickets(3, 1)[0]->total,
-            'ticketsTransferred' => $this->tickets(4, 1)[0]->total,
-            'ticketsOverdue' => $this->tickets(5, 1)[0]->total,
-            'ticketsOpened' => $this->tickets(6, 1)[0]->total,
+            'ticketsCreated' => $this->countTicketsByStatus(1),
+            'ticketsClosed' => $this->countTicketsByStatus(2),
+            'ticketsReopened' => $this->countTicketsByStatus(3),
+            'ticketsTransferred' => $this->countTicketsByStatus(4),
+            'ticketsOverdue' => $this->countTicketsByStatus(5),
+            'ticketsOpened' => $this->countTicketsByStatus(6),
         ]);
+    }
+
+    public function countTicketsByStatus($type)
+    {
+        $total = 0;
+        if (!empty($type)) {
+            $total = $this->tickets($type, 1)[0]->total;
+        }
+        return $total;
     }
 }
