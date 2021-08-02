@@ -41,19 +41,17 @@ class OsTicketController extends Controller
             }
             $field = "{$email} AS email ";
             $table = $this->ticketTables();
-            info($table);
             $table = "{$table} {$join}";
             $where = $this->ticketWhereByStatus($ticket_status);
             $order = " ORDER BY ost_thread_event.thread_id ASC";
 
             $query_array = [$field, $table, $where, $order];
-            info(print_r($query_array, true));
 
             $response = [
                 "ticket_status" => $ticket_status,
                 "actor" => $actor,
-                "emails" => $this->queryBuilder($query_array
-                )];
+                "emails" => $this->queryBuilder($query_array)
+            ];
         }
         return $response;
     }
@@ -81,8 +79,6 @@ class OsTicketController extends Controller
                         . "AND ost_thread_event.thread_id NOT IN (SELECT thread_id FROM ost_thread_event WHERE ost_thread_event.state ='closed' GROUP BY thread_id ORDER BY id DESC) "
                         . "AND ost_ticket.status_id IN (1,6)";
                     break;
-                    info('----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-                    info($response);
                 case 6:
                     $response = "{$response} GROUP BY ost_thread_event.thread_id) AND ost_ticket.status_id IN (1,6)";
                     break;
