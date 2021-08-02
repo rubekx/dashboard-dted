@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\DashboardController;
 
 /*
@@ -26,5 +27,6 @@ Route::get('/dashboard/tickets/table', [DashboardController::class, 'ticketsTabl
 
 Route::get('/dashboard/thread/entry/{thread_id}', [DashboardController::class, 'threadEntryAjax'])->middleware(['auth'])->name('dashboard.thread.entry');
 
+Route::get('/emails', [EmailController::class, 'index'])->middleware(['auth'])->name('emails');
 
 require __DIR__.'/auth.php';

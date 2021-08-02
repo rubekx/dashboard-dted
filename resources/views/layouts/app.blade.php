@@ -12,10 +12,19 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        <link rel="stylesheet" href="{{ URL::asset('css/bootstrap.min.css') }}">
+
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
         <!-- Scripts -->
-        <script src="{{ asset('js/app.js') }}" defer></script>     
+        <script src="{{ asset('js/app.js') }}" defer></script>    
+        <script src="{{ URL::asset('js/jquery.js') }}"></script>     
+        <script src="{{ URL::asset('js/popper.min.js') }}"></script>
+        <script src="{{ URL::asset('js/bootstrap.min.js') }}"></script>
         
+        @if(request()->routeIs('dashboard'))
+            @include('layouts.header_custom')
+        @endif
+
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
