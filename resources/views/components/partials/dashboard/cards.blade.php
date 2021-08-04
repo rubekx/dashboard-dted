@@ -81,6 +81,7 @@
         </div>
         <!--/Metric Card-->
     </div>
+    
     <div class="w-full md:w-1/2 xl:w-1/3 p-6 cursor-pointer"  data-toggle="modal" data-target="#modalTicketsOverdue">
         <!--Metric Card-->
         <div class="border rounded bg-red-600 p-5">

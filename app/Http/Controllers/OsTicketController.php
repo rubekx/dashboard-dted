@@ -47,11 +47,13 @@ class OsTicketController extends Controller
 
             $query_array = [$field, $table, $where, $order];
 
-            $response = [
-                "ticket_status" => $ticket_status,
-                "actor" => $actor,
-                "emails" => $this->queryBuilder($query_array)
-            ];
+            // $response = [
+            //     "ticket_status" => $ticket_status,
+            //     "actor" => $actor,
+            //     "emails" => $this->queryBuilder($query_array)
+            // ];
+            
+            $response = $this->queryBuilder($query_array);
         }
         return $response;
     }

@@ -20,7 +20,6 @@ class EmailController extends Controller
         $total = $this->countTickets(5);
         $os_ticket = new OsTicketController;
         $os_ticket = $os_ticket->actorEmails(5, 2);
-        // $os_ticket='';
         return view('emails.sended')->with([
             'os_ticket' => $os_ticket,
             'emails' => $emails,

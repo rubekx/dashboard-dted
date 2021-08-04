@@ -8,9 +8,10 @@
         <div class="alert alert-success" role="alert">Total de emails enviados: {{count($emails)}}</div>
         <div class="alert alert-danger" role="alert">Total de emails enviados: {{$total}}</div>
         <div class="alert alert-danger" role="alert">Total de emails enviados:
-                @foreach ( $os_ticket as $os)
-                    {{print_r($os)}}
-                @endforeach
+            @foreach ( $os_ticket as $os =>$value)
+            {{print_r($value)}}
+            {{-- {{$value}} --}}
+            @endforeach
         </div>
     </main>
 </x-app-layout>
