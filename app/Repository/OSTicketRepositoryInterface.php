@@ -31,13 +31,13 @@ interface OSTicketRepositoryInterface
     * @param int $thread_id
     * @return string the returned string contains JSON
     */
-   public function tickteByThreadIad(int $thread_id): string;    
+   public function tickteByTicketId(int $thread_id): string;    
    
    /**
    * @param int $thread_id
    * @return string the returned string contains JSON
    */
-  public function tickteByThreaadId(int $thread_id): string;
+  public function tickteByObjectId(int $thread_id): string;
 
     // ticket_id
     // object_id
