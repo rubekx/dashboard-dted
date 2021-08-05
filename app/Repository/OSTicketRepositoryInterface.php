@@ -10,10 +10,10 @@ interface OSTicketRepositoryInterface
     public function all(): string;
 
     /**
-     * @param array $state
+     * @param int $ticket_id
      * @return string the returned string contains JSON
      */
-    public function ticktesByState(string $state): string;
+    public function tickteByID(int $ticket_id): string;
 
     /**
      * @param int $number
@@ -25,21 +25,18 @@ interface OSTicketRepositoryInterface
      * @param int $thread_id
      * @return string the returned string contains JSON
      */
-    public function tickteByThreadId(int $thread_id): string;    
-    
-    /**
-    * @param int $thread_id
-    * @return string the returned string contains JSON
-    */
-   public function tickteByThreadIad(int $thread_id): string;    
-   
-   /**
-   * @param int $thread_id
-   * @return string the returned string contains JSON
-   */
-  public function tickteByThreaadId(int $thread_id): string;
+    public function tickteByThreadId(int $thread_id): string;
 
-    // ticket_id
-    // object_id
+    /**
+     * @param int $object_id
+     * @return string the returned string contains JSON
+     */
+    public function tickteByObjectId(int $object_id): string;
+
+    /**
+     * @param array $state
+     * @return string the returned string contains JSON
+     */
+    public function ticktesByState(string $state): string;
 
 }
