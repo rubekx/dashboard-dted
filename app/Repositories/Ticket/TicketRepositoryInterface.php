@@ -34,9 +34,16 @@ interface TicketRepositoryInterface
     public function tickteByObjectId(int $object_id);
 
     /**
-     * @param array $state
+     * @param string $state
+     * @param int  $count | nullable
      * @return string the returned string contains JSON
      */
-    public function ticktesByState(string $state);
+    public function ticktesByState(int $state, int $count = null);
+
+    /**
+     * @param int $count
+     * @return object the returned contains db object
+     */
+    public function responseTicktesByState(int $count);
 
 }

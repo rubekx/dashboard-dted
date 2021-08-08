@@ -31,8 +31,8 @@ class EmailController extends Controller
     {
         $count = 0;
         if (!empty($type)) {
-            $count = new DashboardController;
-            $count = $count->countTicketsByStatus($type);
+            // $count = new DashboardController;
+            // $count = $count->countTicketsByStatus($type);
         }
         return $count;
     }

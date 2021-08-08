@@ -1,8 +1,8 @@
 <?php
-
+// https://www.onlinecode.org/jquery-datatable-server-side-sortingpagination-and-searching-using-php-and-mysql/
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\OsTicketController;
+use App\Repositories\Ticket\TicketRepositoryInterface;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
 
-    protected $db;
+    private $repository;
 
-    public function __construct()
+    public function __construct(TicketRepositoryInterface $repository)
     {
-        $this->middleware('auth');
+        $this->repository = $repository;
+        // $this->middleware('auth');
     }
 
-    // https://www.onlinecode.org/jquery-datatable-server-side-sortingpagination-and-searching-using-php-and-mysql/
     public function tickets($type, $count = null)
     {
         $field = $this->ticketQueryField($count);
@@ -275,14 +275,16 @@ class DashboardController extends Controller
     public function threadEntryAjax($thread_id)
     {
         $message = '';
-        $thread_data = [];
-        $header = $this->threadHeader($thread_id);
-        $message = $header . $message;
-        $thread_data = $this->threadEntries($thread_id, $thread_data);
-        $thread_data = $this->threadEnvents($thread_id, $thread_data);
-        usort($thread_data, [$this, 'date_compare']);
-        foreach ($thread_data as $element) {
-            $message = $this->threadCard($message, $element);
+        if (is_integer($thread_id)) {
+            $thread_data = [];
+            $header = $this->threadHeader($thread_id);
+            $message = $header . $message;
+            $thread_data = $this->threadEntries($thread_id, $thread_data);
+            $thread_data = $this->threadEnvents($thread_id, $thread_data);
+            usort($thread_data, [$this, 'date_compare']);
+            foreach ($thread_data as $element) {
+                $message = $this->threadCard($message, $element);
+            }
         }
         return $message;
     }
@@ -297,7 +299,12 @@ class DashboardController extends Controller
     public function ticketsTableAjax(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->tickets($request->type);
+            // try {
+                $data = $this->repository->ticktesByState($request->type);
+            // } catch (\Exception $e) {
+            //     info($e);
+            //     $data = $e;
+            // }
             return Datatables::of($data)->addIndexColumn()->addColumn('action', function ($row) {
                 $btn = '<a data-toggle="tooltip" data-id="' . $row->thread_id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm showMessages">Detalhes</a>';
                 return $btn;
@@ -307,22 +314,25 @@ class DashboardController extends Controller
 
     public function indexTable()
     {
-        return view('dashboard')->with([
-            'ticketsCreated' => $this->countTicketsByStatus(1),
-            'ticketsClosed' => $this->countTicketsByStatus(2),
-            'ticketsReopened' => $this->countTicketsByStatus(3),
-            'ticketsTransferred' => $this->countTicketsByStatus(4),
-            'ticketsOverdue' => $this->countTicketsByStatus(5),
-            'ticketsOpened' => $this->countTicketsByStatus(6),
-        ]);
+        return view('dashboard')
+            ->with([
+                'ticketsCreated' => $this->countTicketsByStatus(1),
+                'ticketsClosed' => $this->countTicketsByStatus(2),
+                'ticketsReopened' => $this->countTicketsByStatus(3),
+                'ticketsTransferred' => $this->countTicketsByStatus(4),
+                'ticketsOverdue' => $this->countTicketsByStatus(5),
+                'ticketsOpened' => $this->countTicketsByStatus(6),
+            ]);
     }
 
     public function countTicketsByStatus($type)
     {
-        $total = 0;
-        if (!empty($type)) {
-            $total = $this->tickets($type, 1)[0]->total;
+        try {
+            return $this->repository->ticktesByState($type, 1);
+        } catch (\Exception $e) {
+            info();
+            return $e;
         }
-        return $total;
     }
+
 }
