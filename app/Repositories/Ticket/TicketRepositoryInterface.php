@@ -1,42 +1,42 @@
 <?php
-// https://asperbrothers.com/blog/implement-repository-pattern-in-laravel/
-namespace App\Repository;
 
-interface OSTicketRepositoryInterface
+namespace App\Repositories\Ticket;
+
+interface TicketRepositoryInterface
 {
     /**
      * @return string the returned string contains JSON
      */
-    public function all(): string;
+    public function all();
 
     /**
      * @param int $ticket_id
      * @return string the returned string contains JSON
      */
-    public function tickteByID(int $ticket_id): string;
+    public function tickteByID(int $ticket_id);
 
     /**
      * @param int $number
      * @return string the returned string contains JSON
      */
-    public function tickteByNumber(int $number): string;
+    public function tickteByNumber(int $number);
 
     /**
      * @param int $thread_id
      * @return string the returned string contains JSON
      */
-    public function tickteByThreadId(int $thread_id): string;
+    public function tickteByThreadId(int $thread_id);
 
     /**
      * @param int $object_id
      * @return string the returned string contains JSON
      */
-    public function tickteByObjectId(int $object_id): string;
+    public function tickteByObjectId(int $object_id);
 
     /**
      * @param array $state
      * @return string the returned string contains JSON
      */
-    public function ticktesByState(string $state): string;
+    public function ticktesByState(string $state);
 
 }
