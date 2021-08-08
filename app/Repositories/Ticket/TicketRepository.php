@@ -86,7 +86,7 @@ class TicketRepository implements TicketRepositoryInterface
             ->where(function ($query) use ($state) {
                 switch ($state) {
                     case 1:
-                        $query->whereIn('ost_thread_event.id', $this->db->table('ost_thread_event')->selectRaw('MAX(ost_thread_event.id)')->groupBy('ost_thread_event.thread_id'));
+                        $query->whereIn('ost_thread_event.id', $this->db->table('ost_thread_event')->selectRaw('MAX(id)')->groupBy('thread_id'));
                         break;
                     case 2:
                         $query->whereIn('ost_thread_event.id', $this->db->table('ost_thread_event')->selectRaw('MAX(id)')->groupBy('thread_id'))->where('ost_ticket.status_id', 3);
