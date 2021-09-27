@@ -29,4 +29,6 @@ Route::get('/dashboard/thread/entry/{thread_id}', [DashboardController::class, '
 
 Route::get('/emails', [EmailController::class, 'index'])->middleware(['auth'])->name('emails');
 
+URL::forceScheme('https');
+
 require __DIR__.'/auth.php';
