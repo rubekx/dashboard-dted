@@ -64,7 +64,7 @@ return [
         ],
 
         'mysql2' => [
-            'driver' =>env('DB_CONNECTION_SECOND'),
+            'driver' =>'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST_SECOND', '127.0.0.1'),
             'port' => env('DB_PORT_SECOND', '3306'),
