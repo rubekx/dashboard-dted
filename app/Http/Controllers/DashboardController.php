@@ -257,7 +257,7 @@ class DashboardController extends Controller
         try {
             return $this->repository->ticktesByState($type, 1);
         } catch (\Exception $e) {
-            info();
+            info($e);
             return $e;
         }
     }
