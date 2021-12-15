@@ -30,3 +30,7 @@ Route::get('/dashboard/thread/entry/{thread_id}', [DashboardController::class, '
 Route::get('/emails', [EmailController::class, 'index'])->middleware(['auth'])->name('emails');
 
 require __DIR__.'/auth.php';
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
