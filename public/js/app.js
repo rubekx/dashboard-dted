@@ -8437,7 +8437,7 @@ function Dashboard(props) {
     errors: props.errors,
     header: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h2", {
       className: "font-semibold text-xl text-gray-800 leading-tight",
-      children: "Dashboard Rubem"
+      children: "Dashboard"
     }),
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_2__.Head, {
       title: "Dashboard"
