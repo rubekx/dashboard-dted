@@ -1,8 +1,8 @@
 <?php
 
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EmailController;
-use App\Http\Controllers\DashboardController;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,21 +16,16 @@ use App\Http\Controllers\DashboardController;
 */
 
 Route::get('/', function () {
-    return redirect()->route('login');
-})->middleware('guest');
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
 
-Route::get('/dashboard', [DashboardController::class, 'indexTable'])->middleware(['auth'])->name('dashboard');
-
-Route::get('/criados', [DashboardController::class, 'index'])->middleware(['auth'])->name('criados');
-
-Route::get('/dashboard/tickets/table', [DashboardController::class, 'ticketsTableAjax'])->middleware(['auth'])->name('dashboard.tickets.table');
-
-Route::get('/dashboard/thread/entry/{thread_id}', [DashboardController::class, 'threadEntryAjax'])->middleware(['auth'])->name('dashboard.thread.entry');
-
-Route::get('/emails', [EmailController::class, 'index'])->middleware(['auth'])->name('emails');
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__.'/auth.php';
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
