@@ -19,9 +19,6 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
-
-        @env ('local')
-        {{-- <script src="{{ mix('js/bundle.js') }}"></script> --}}
-        @endenv
+        {{-- @env('local')<script src="{{ mix('js/bundle.js') }}"></script>@endenv --}}
     </body>
 </html>
