@@ -740,6 +740,9 @@ select {
 .h-9 {
   height: 2.25rem;
 }
+.h-auto {
+  height: auto;
+}
 .min-h-screen {
   min-height: 100vh;
 }
