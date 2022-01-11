@@ -17,5 +17,5 @@ yarn-error.log
 composer.lock
 package-lock.json
 
-storage/debugbar/
-phpUnitTeste/
+/storage/debugbar
+/phpUnitTeste
