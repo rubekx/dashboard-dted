@@ -82,7 +82,7 @@ export default function Login({ status, canResetPassword }) {
                     </div>
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    <div className="text-center d-grid gap-2 d-md-block">
+                    <div className="text-center">
                         <Button className="btn-danger" processing={processing}>
                             Entrar
                         </Button>
