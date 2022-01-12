@@ -1,28 +1,36 @@
-import React from 'react';
-import Footer from '@/Layouts/Footer';
+
 import Login from '@/Pages/Auth/Login';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Footer from '@/Layouts/Footer';
 import NavBarGuest from '@/Layouts/Navbar/NavBarGuest';
+
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
+import Container from 'react-bootstrap/Container';
+
 import Banner from '../../svg/banner.jpg';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Layouts/Layout.css';
+import { Head } from '@inertiajs/inertia-react';
 
 export default function Home() {
     return (
         <>
+            <Head title="SMCA"/>
             <NavBarGuest/>
             <Container>
-                <Card className='dted-rounded'>
+                <Card className='w-75 mx-auto dted-card border-0'>
+                    <Card.Body className='flex items-center justify-start'>
+                        <Card.Title as="h2"> DTED - SMCA </Card.Title>
+                        <Card.Subtitle as="h5" className="mb-1 text-muted">(Sistema de monitoramento da Central de Atendimento)</Card.Subtitle>
+                    </Card.Body>
                     <Card.Body>
-                        <Row className='h-100 justify-content-center align-items-center'>
-                            <Col md={6} sm={8}>
-                                <img className='img-fluid' src={Banner} />
+                        <Row className="dted-card-body h-100 justify-content-center align-items-center ">
+                            <Col md={6}>
+                                <img src={Banner}/>
                             </Col>
-                            <Col md={6} sm={8}>
-                                <Login canResetPassword={false}/>
+                            <Col md={6}>
+                                    <Login canResetPassword={true}/>
                             </Col>
                         </Row>
                     </Card.Body>

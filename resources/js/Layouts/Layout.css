@@ -9,12 +9,40 @@ footer {
 
 .dted-rounded {
     margin-top: 50px;
-    padding: 1.5em .5em .5em;
-    border-radius: 2em;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
     margin-bottom: 50px;
+    border-radius: 25px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+
+.dted-card {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.dted-card-body {
+    border-radius: 20px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+
+.dted-home-title {
+    display: inline;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #4F4F4F;
+}
+
+.dted-banner {
+    overflow: hidden
 }
 
 .dted-logo {
     margin-left: 100%;
+}
+
+
+.btn-danger,
+.btn-danger:hover,
+.btn-danger:active,
+.btn-danger:visited {
+    background-color: #8D0333;
 }

@@ -6,6 +6,7 @@ import Input from '@/Components/Input';
 import Label from '@/Components/Label';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
+import Form from 'react-bootstrap/Form'
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -32,62 +33,61 @@ export default function Login({ status, canResetPassword }) {
 
     return (
         <Guest>
-            <Head title="Log in" />
 
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
             <ValidationErrors errors={errors} />
 
             <form onSubmit={submit}>
-                <div>
-                    <Label forInput="email" value="E-mail" />
+                <Form.Group className="mb-3">
+                    <div className="mt-4">
+                        <Label forInput="email" value="E-mail" />
 
-                    <Input
-                        type="text"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        handleChange={onHandleChange}
-                    />
-                </div>
+                        <Input
+                            type="text"
+                            name="email"
+                            value={data.email}
+                            className="mt-1 block w-full"
+                            autoComplete="username"
+                            isFocused={true}
+                            handleChange={onHandleChange}
+                        />
+                    </div>
 
-                <div className="mt-4">
-                    <Label forInput="password" value="Senha" />
+                    <div className="mt-4">
+                        <Label forInput="password" value="Senha" />
+                        <Input
+                            type="password"
+                            name="password"
+                            value={data.password}
+                            className="mt-1 block w-full"
+                            autoComplete="current-password"
+                            handleChange={onHandleChange}
+                        />
+                    </div>
 
-                    <Input
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        handleChange={onHandleChange}
-                    />
-                </div>
+                </Form.Group>
 
-                <div className="block mt-4">
-                    <label className="flex items-center">
-                        <Checkbox name="remember" value={data.remember} handleChange={onHandleChange} />
+                <Form.Group className="mb-3">
+                    <div className="flex items-center justify-end mt-4">
+                        {canResetPassword && (
+                            <Link
+                                href={route('password.request')}
+                                className="text-sm text-blue-600 hover:text-blue-900"
+                            >
+                                Esqueci minha senha
+                            </Link>
+                        )}
 
-                        <span className="ml-2 text-sm text-gray-600">Lembrar</span>
-                    </label>
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="underline text-sm text-gray-600 hover:text-gray-900"
-                        >
-                            Esqueceu sua senha?
-                        </Link>
-                    )}
-
-                    <Button className="ml-4" processing={processing}>
-                        Entrar
-                    </Button>
-                </div>
+                    </div>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <div className="text-center d-grid gap-2 d-md-block">
+                        <Button className="btn-danger" processing={processing}>
+                            Entrar
+                        </Button>
+                    </div>
+                </Form.Group>
             </form>
         </Guest>
     );

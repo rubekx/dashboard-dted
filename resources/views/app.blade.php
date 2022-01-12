@@ -16,7 +16,8 @@
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
-    <body class="d-flex flex-column min-vh-100">
+    <body>
+    {{-- <body class="d-flex flex-column min-vh-100"> --}}
             @inertia
     </body>
 </html>
