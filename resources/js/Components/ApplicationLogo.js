@@ -1,4 +1,3 @@
-import React from 'react';
 import dtedLogo from '../../svg/dted.svg';
 
 export default function ApplicationLogo({ className }) {

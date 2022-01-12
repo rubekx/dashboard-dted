@@ -6,6 +6,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon, UserIcon } from '@heroicons/react/outline'
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import HomeBanner from '@/Components/HomeBanner';
+import NavBarGuest from '@/Layouts/Navbar/NavBarGuest';
 
 
 const user = {
@@ -180,7 +181,7 @@ export default function Welcome() {
 
         <header className="bg-white shadow">
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold text-gray-900">DTED - SMCA (Sistema de monitoramento da Central de Atendimento)</h1>
+            <h1 className="text-3xl font-bold text-gray-600">DTED - SMCA (Sistema de monitoramento da Central de Atendimento)</h1>
           </div>
         </header>
         <main>

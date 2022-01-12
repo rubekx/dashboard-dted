@@ -16,8 +16,12 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    return Inertia::render('Home');
 })->middleware('guest');
+
+Route::get('/example',function(){
+    return view('example');
+});
 
 
 Route::middleware(['auth', 'verified'])->group(function () {

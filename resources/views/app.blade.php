@@ -12,12 +12,11 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-
         <!-- Scripts -->
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
-    <body class="h-full font-sans antialiased">
-        @inertia
+    <body class="d-flex flex-column min-vh-100">
+            @inertia
     </body>
 </html>
