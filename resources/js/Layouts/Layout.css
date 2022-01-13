@@ -2,9 +2,12 @@
     background: #8D0333;
 }
 
-footer {
+.dted-footer {
     background: #8D0333;
     color: #FFFFFF;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 
 .dted-rounded {
@@ -20,7 +23,7 @@ footer {
 }
 
 .dted-card-body {
-    border-radius: 20px;
+    border-radius: 30px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
 }
 
@@ -31,14 +34,29 @@ footer {
     color: #4F4F4F;
 }
 
-.dted-banner {
-    overflow: hidden
-}
-
 .dted-logo {
     margin-left: 100%;
 }
 
+.dted-card-home {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    max-width: 900px;
+}
+
+.dted-card-image {
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+@media screen and (max-width: 600px) {
+    .dted-card-image {
+        display: none;
+    }
+    .dted-logo {
+        margin-left: 0;
+    }
+}
 
 .btn-danger,
 .btn-danger:hover,

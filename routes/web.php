@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 Route::get('/example',function(){
     return view('example');
-});
+})->middleware('guest');
 
 
 Route::middleware(['auth', 'verified'])->group(function () {

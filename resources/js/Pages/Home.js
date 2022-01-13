@@ -19,7 +19,7 @@ export default function Home() {
             <Head title="SMCA"/>
             <NavBarGuest/>
             <Container>
-                <Card className='w-75 mx-auto dted-card border-0'>
+                {/* <Card className='w-75 mx-auto dted-card border-0'>
                     <Card.Body className='flex items-center justify-start'>
                         <Card.Title as="h2"> DTED - SMCA </Card.Title>
                         <Card.Subtitle as="h5" className="mb-1 text-muted">(Sistema de monitoramento da Central de Atendimento)</Card.Subtitle>
@@ -27,14 +27,27 @@ export default function Home() {
                     <Card.Body>
                         <Row className="dted-card-body h-100 justify-content-center align-items-center ">
                             <Col md={6}>
-                                <img src={Banner}/>
+                                <img className='' src={Banner}/>
                             </Col>
                             <Col md={6}>
                                     <Login canResetPassword={true}/>
                             </Col>
                         </Row>
                     </Card.Body>
-                </Card>
+                </Card> */}
+
+                <div className="dted-card-body mx-auto dted-card-home">
+                    <div className="row g-0 align-items-center">
+                        <div className="col-md-6">
+                            <img src={Banner} className="img-fluid dted-card-image"/>
+                        </div>
+                        <div className="col-md-6">
+                            <div className="card-body">
+                                <Login canResetPassword={true}/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </Container>
             <Footer/>
         </>

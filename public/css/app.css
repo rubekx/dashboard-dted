@@ -843,12 +843,6 @@ select {
 .w-10 {
   width: 2.5rem;
 }
-.w-80 {
-  width: 20rem;
-}
-.w-7 {
-  width: 1.75rem;
-}
 .max-w-7xl {
   max-width: 80rem;
 }
@@ -939,9 +933,6 @@ select {
 }
 .justify-between {
   justify-content: space-between;
-}
-.gap-2 {
-  gap: 0.5rem;
 }
 .space-x-8 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
