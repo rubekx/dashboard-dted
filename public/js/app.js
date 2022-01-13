@@ -10321,9 +10321,27 @@ function Home() {
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_6__.Head, {
       title: "SMCA"
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_Layouts_Navbar_NavBarGuest__WEBPACK_IMPORTED_MODULE_2__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(react_bootstrap_Container__WEBPACK_IMPORTED_MODULE_8__["default"], {
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
-        className: "dted-card-body mx-auto dted-card-home",
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_Layouts_Navbar_NavBarGuest__WEBPACK_IMPORTED_MODULE_2__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_bootstrap_Container__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+        className: "mx-auto dted-home-title",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
+          className: "row g-0",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+            className: "col-md-4",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h2", {
+              className: "text-center",
+              children: "DTED - SMCA"
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+            className: "col-md-8 p-2",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h5", {
+              className: "text-center",
+              children: "(Sistema de monitoramento da Central de Atendimento)"
+            })
+          })]
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+        className: "mx-auto dted-card-home",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
           className: "row g-0 align-items-center",
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
@@ -10342,7 +10360,7 @@ function Home() {
             })
           })]
         })
-      })
+      })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_Layouts_Footer__WEBPACK_IMPORTED_MODULE_1__["default"], {})]
   });
 }
@@ -15844,7 +15862,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".navbar {\n    background: #8D0333;\n}\n\n.dted-footer {\n    background: #8D0333;\n    color: #FFFFFF;\n    position: absolute;\n    bottom: 0;\n    width: 100%;\n}\n\n.dted-rounded {\n    margin-top: 50px;\n    margin-bottom: 50px;\n    border-radius: 25px;\n    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);\n}\n\n.dted-card {\n    margin-top: 50px;\n    margin-bottom: 50px;\n}\n\n.dted-card-body {\n    border-radius: 30px;\n    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);\n}\n\n.dted-home-title {\n    display: inline;\n    margin-top: 10px;\n    margin-bottom: 10px;\n    color: #4F4F4F;\n}\n\n.dted-logo {\n    margin-left: 100%;\n}\n\n.dted-card-home {\n    margin-top: 50px;\n    margin-bottom: 50px;\n    max-width: 900px;\n}\n\n.dted-card-image {\n    border-top-left-radius: 30px;\n    border-bottom-left-radius: 30px;\n}\n\n@media screen and (max-width: 600px) {\n    .dted-card-image {\n        display: none;\n    }\n    .dted-logo {\n        margin-left: 0;\n    }\n}\n\n.btn-danger,\n.btn-danger:hover,\n.btn-danger:active,\n.btn-danger:visited {\n    background-color: #8D0333;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".navbar {\n    background: #8D0333;\n}\n\n.dted-footer {\n    background: #8D0333;\n    color: #FFFFFF;\n    position: absolute;\n    bottom: 0;\n    width: 100%;\n}\n\n.dted-card {\n    margin-top: 50px;\n    margin-bottom: 50px;\n}\n\n\n.dted-logo {\n    margin-left: 100%;\n}\n\n.dted-card-home {\n    border-radius: 30px;\n    margin-top: 10px;\n    margin-bottom: 50px;\n    max-width: 900px;\n    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);\n}\n\n.dted-home-title {\n    margin-top: 50px;\n    max-width: 770px;\n    color: #4F4F4F;\n}\n\n.dted-card-image {\n    border-top-left-radius: 30px;\n    border-bottom-left-radius: 30px;\n}\n\n@media screen and (max-width: 900px) {\n    .dted-card-image {\n        display: none;\n    }\n    .dted-logo {\n        margin-left: 0;\n    }\n}\n\n.btn-danger,\n.btn-danger:hover,\n.btn-danger:active,\n.btn-danger:visited {\n    background-color: #8D0333;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

@@ -36,7 +36,17 @@ export default function Home() {
                     </Card.Body>
                 </Card> */}
 
-                <div className="dted-card-body mx-auto dted-card-home">
+                <div className='mx-auto dted-home-title'>
+                    <div className='row g-0'>
+                        <div className='col-md-4'>
+                            <h2 className='text-center'>DTED - SMCA</h2>
+                        </div>
+                        <div className='col-md-8 p-2'>
+                            <h5 className='text-center'>(Sistema de monitoramento da Central de Atendimento)</h5>
+                        </div>
+                    </div>
+                </div>
+                <div className="mx-auto dted-card-home">
                     <div className="row g-0 align-items-center">
                         <div className="col-md-6">
                             <img src={Banner} className="img-fluid dted-card-image"/>
