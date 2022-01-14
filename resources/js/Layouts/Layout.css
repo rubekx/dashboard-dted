@@ -5,9 +5,6 @@
 .dted-footer {
     background: #8D0333;
     color: #FFFFFF;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
 }
 
 .dted-card {
@@ -30,7 +27,7 @@
 
 .dted-home-title {
     margin-top: 50px;
-    max-width: 770px;
+    max-width: 850px;
     color: #4F4F4F;
 }
 
@@ -39,12 +36,21 @@
     border-bottom-left-radius: 30px;
 }
 
-@media screen and (max-width: 900px) {
+@media only screen and (max-width: 1000px) {
     .dted-card-image {
         display: none;
     }
+
     .dted-logo {
         margin-left: 0;
+    }
+}
+
+@media only screen and (min-width: 1366px) {
+    .dted-footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
     }
 }
 
