@@ -32,8 +32,8 @@ export default function Login({ status, canResetPassword }) {
     };
 
     return (
-        <Guest>
-
+        <>
+        {/* <Guest> */}
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
             <ValidationErrors errors={errors} />
@@ -89,6 +89,7 @@ export default function Login({ status, canResetPassword }) {
                     </div>
                 </Form.Group>
             </form>
-        </Guest>
+        {/* </Guest> */}
+        </>
     );
 }

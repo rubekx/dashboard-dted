@@ -15,6 +15,8 @@ module.exports = {
             },
             colors: {
                 'dted-red': '#8d0333',
+                'dted-red-dark': '#56011B',
+
             },
         },
     },
